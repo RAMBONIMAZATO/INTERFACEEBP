@@ -1,0 +1,193 @@
+/*ADM*/
+$q1="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'ADM' ELSE 'ADM' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'ADM') AND Dates=DATE(NOW())";
+$r_q1=mysqli_query($connection, $q1);
+
+/*BRODERIE*/
+$q2="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'BRODERIE' ELSE 'BRODERIE' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'BDR' OR Code='BDRPS') AND Dates=DATE(NOW())";
+$r_q2=mysqli_query($connection, $q2);
+
+/*COMPLIANCE*/
+$q3="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'COMPLIANCE' ELSE 'COMPLIANCE' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'CPL' OR Code='CPLC') AND Dates=DATE(NOW())";
+$r_q3=mysqli_query($connection, $q3);
+
+/*COUPE MK1 ET MK3*/
+$q4="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'COUPE MK 01 ET MK3' ELSE 'COUPE MK 01 ET MK3' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'CPE' OR Code='CPEF') AND Dates=DATE(NOW())";
+$r_q4=mysqli_query($connection, $q4);
+
+
+/*DRY PROCESS*/
+$q5="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'DRY-PROCESS' ELSE 'DRY-PROCESS' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'DPR' OR Code='DPR') AND Dates=DATE(NOW())";
+$r_q5=mysqli_query($connection, $q5);
+
+/*FINITION*/
+$q6="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'FINITION' ELSE 'FINITION' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'FNT' OR Code='FNTLO') AND Dates=DATE(NOW())";
+$r_q6=mysqli_query($connection, $q6);
+
+/*GENERAL*/
+$q7="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'GENERAL' ELSE 'GENERAL' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'GNR' OR Code='GNRS') AND Dates=DATE(NOW())";
+$r_q7=mysqli_query($connection, $q7);
+
+
+/*IE*/
+$q8="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'IE' ELSE 'IE' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'IE') AND Dates=DATE(NOW())";
+$r_q8=mysqli_query($connection, $q8);
+
+/*LAVERIE*/
+$q9="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'LAVERIE' ELSE 'LAVERIE' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'LVG') AND Dates=DATE(NOW())";
+$r_q9=mysqli_query($connection, $q9);
+
+/*maintenance*/
+$q10="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'MAINTENANCE' ELSE 'MAINTENANCE' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'MNT' OR Code='MNTWT') AND Dates=DATE(NOW())";
+$r_q10=mysqli_query($connection, $q10);
+
+/*marker*/
+$q11="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'MARKER' ELSE 'MARKER' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'MRO') AND Dates=DATE(NOW())";
+$r_q11=mysqli_query($connection, $q11);
+
+/*MECANO*/
+$q12="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'MECANO' ELSE 'MECANO' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'MEC') AND Dates=DATE(NOW())";
+$r_q12=mysqli_query($connection, $q12);
+
+/*QA*/
+$q13="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'QA' ELSE 'QA' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'QA') AND Dates=DATE(NOW())";
+$r_q13=mysqli_query($connection, $q13);
+
+/*RECYCLING*/
+$q14="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'RECYCLING' ELSE 'RECYCLING' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'RCL') AND Dates=DATE(NOW())";
+$r_q14=mysqli_query($connection, $q14);
+
+/*SAMPLE*/
+$q15="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'SAMPLE' ELSE 'SAMPLE' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'SMP') AND Dates=DATE(NOW())";
+$r_q15=mysqli_query($connection, $q15);
+
+/*sewing*/
+$q16="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'SEWING' ELSE 'SEWING' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'LN1' OR Code='LN10' OR Code='LN11' OR Code='LN12' OR Code='LN13' OR Code='LN14' OR Code='LN15' OR Code='LN16' OR Code='LN17' OR Code='LN2' OR Code='LN3' OR Code='LN4' OR Code='LN5' OR Code='LN6' OR Code='LN7' OR Code='LN8' OR Code='LN9') AND Dates=DATE(NOW())";
+$r_q16=mysqli_query($connection, $q16);
+
+/*STORE*/
+$q17="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'STORE' ELSE 'STORE' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'STR') AND Dates=DATE(NOW())";
+$r_q17=mysqli_query($connection, $q17);
+
+/*TRAINING*/
+$q18="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'TRAINING' ELSE 'TRAINING' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'TRAIN') AND Dates=DATE(NOW())";
+$r_q18=mysqli_query($connection, $q18);
+
+/*ZIPPER*/
+$q19="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'ZIPPER' ELSE 'ZIPPER' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'ZPR') AND Dates=DATE(NOW())";
+$r_q19=mysqli_query($connection, $q19);
+
+/*total cdi*/
+$q20="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'Total CDI' ELSE 'Total CDI' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'Total CDI') AND Dates=DATE(NOW())";
+$r_q20=mysqli_query($connection, $q20);
+
+/*broderie*/
+$q21="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'BDRCDD' ELSE 'BDRCDD' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'BDRCDD') AND Dates=DATE(NOW())";
+$r_q21=mysqli_query($connection, $q21);
+
+/*DRY PROCESS CDD*/
+$q22="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'DPRCDD' ELSE 'DPRCDD' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'DPRCDD') AND Dates=DATE(NOW())";
+$r_q22=mysqli_query($connection, $q22);
+
+/*LAVERIE CDD*/
+$q23="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'LVGCDD' ELSE 'LVGCDD' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'LVGCDD') AND Dates=DATE(NOW())";
+$r_q23=mysqli_query($connection, $q23);
+
+/*FORMATION*/
+$q24="INSERT INTO `t_pourcentage_absence`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'FORMATION' ELSE 'FORMATION' END) AS Code, SUM(EffJ_1) AS EffJ_1, SUM(EffJ) AS EffJ, SUM(Nb_pres) AS Nb_pres, SUM(P_abs) AS P_abs, SUM(Conge) AS Conge, SUM(CM) AS CM,
+SUM(AbsAuto) AS AbsAuto, SUM(Perm) AS Perm, SUM(Com) AS Com, SUM(Susp) AS Susp, SUM(RM) AS RM, SUM(Recup) AS Recup, SUM(Hosp) AS Hosp, SUM(Map) AS Map, SUM(NS) AS NS, SUM(SM) AS SM, Dates
+FROM  `t_pourcentage_cdd_cdi` 
+WHERE (Code= 'FORMATION') AND Dates=DATE(NOW())";
+$r_q24=mysqli_query($connection, $q24);

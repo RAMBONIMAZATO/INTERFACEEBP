@@ -1,0 +1,200 @@
+DELETE FROM t_present_jours WHERE Dates=Date(now())
+DELETE FROM t_presence_journalier WHERE Dates=Date(now())
+DELETE FROM t_pres_h_jours WHERE Dates=Date(now())
+DELETE FROM  t_heures_journalier WHERE Dates=Date(now())
+DELETE FROM t_h_e_s WHERE Dates='2020-11-30'
+
+
+DELETE FROM t_retard_journalier WHERE Dates=Date(now())
+DELETE FROM t_pourcentage_retard_journalier WHERE Dates=Date(now())
+DELETE FROM t_absence_journalier WHERE Dates=Date(now())
+
+
+DELETE FROM `abs_auto` WHERE Dates=Date(now())
+
+DELETE FROM `comission` WHERE Dates=Date(now())
+
+DELETE FROM `conge` WHERE Dates=Date(now())
+
+DELETE FROM `conge_mat` WHERE Dates=Date(now())
+
+DELETE FROM `nightshift` WHERE Dates=Date(now())
+
+DELETE FROM `recup` WHERE Dates=Date(now())
+
+DELETE FROM `rep_med` WHERE Dates=Date(now())
+
+DELETE FROM `sans_motif` WHERE Dates=Date(now())
+
+DELETE FROM `sumary` WHERE Dates=Date(now())
+
+DELETE FROM `t_motif` WHERE Dates=Date(now())
+
+DELETE FROM `t_pourcentage_cdd_cdi` WHERE Dates=Date(now())
+
+DELETE FROM `t_pourcentage_absence` WHERE Dates=Date(now())
+
+
+
+SELECT distinct a.UserId as UserId, a.DeptId, a.Code, a.Dates, a.Obs, a.Dates_fin, m.motif FROM t_absence_jours a LEFT JOIN test_night_shift m ON a.UserId=m.Mat WHERE Dates=DATE(now())
+
+SELECT distinct UserId as UserId, DeptId, Code, Dates, Obs, Dates_fin FROM t_absence_jours WHERE Dates=DATE(now())
+
+SELECT d.UserId, d.Name, d.Fonction, d.DeptId, d.Code, m.Motif FROM t_dept_user d LEFT JOIN test_night_shift m ON d.UserId= m.Mat WHERE m.Debut=Date(now())
+
+SELECT u.UserId, u.Name, p.Dates
+FROM t_dept_user u
+LEFT JOIN t_present_jours p ON u.UserId = p.UserId
+WHERE p.Dates =  '2020-11-30'
+
+
+/*Mety fa ela be*/
+SELECT u.UserId, u.Name, n.Dept, n.Motif, n.Debut, t.H_travail FROM t_dept_user u 
+LEFT JOIN test_night_shift n ON u.UserId=n.Mat 
+LEFT JOIN t_h_travail t ON n.Debut=t.Dates
+WHERE n.Debut='2020-11-24' AND n.Motif='night shift'
+
+/*andrana*/
+SELECT UserId, Name, Fonction, Code, MIN( Dates ) AS Dates_debut, ABS( DATEDIFF( MIN( Dates ) , MAX( Dates ) ) ) AS Nb_jours, WEEK( Dates ) AS Semaine, SEC_TO_TIME( SUM( TIME_TO_SEC( H_travail ) ) ) AS H_semaine FROM t_h_travail 
+WHERE (Dates BETWEEN  '2020-11-23' AND  '2020-11-28')
+GROUP BY UserId, Name
+
+
+SELECT UserId, Name, Fonction, Code, H_travail FROM t_h_travail 
+WHERE UserId NOT IN (SELECT Mat FROM test_night_shift WHERE Motif='night shift' AND Debut='2020-11-23') 
+
+
+/*Night Shift*/
+
+SELECT e.UserId, e.Name, e.Fonction, e.Dates, e.H_entree, s.Dates, s.H_sortie
+FROM t_night_shift_entree e
+LEFT JOIN t_night_shift_sortie s ON e.UserId = s.UserId
+WHERE e.Dates =  '2020-11-23'
+AND s.Dates =  '2020-11-24'
+
+/*
+SELECT e.UserId AS UserId, e.Name AS Name, e.Fonction AS Fonction, e.Dates AS Dates, e.H_entree AS H_entree, s.H_sortie AS H_sortie
+FROM t_night_shift_entree e
+LEFT JOIN t_night_shift_sortie s ON e.UserId = RANDRIAMBELOSON JOHANA MENDRIK	s.UserId
+WHERE e.Dates =  '2020-11-23'
+AND s.Dates =  '2020-11-24' 
+*/
+INSERT INTO t_night_shift_sortie(UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_sortie)
+SELECT Userinfo.Userid AS UserId, Userinfo.Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS H_sortie
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And ((t_dept_save.Code)<>'STC') And ((Checkinout.Userid)=Userinfo.Userid) And ((DateValue(Checkinout.CheckTime))=#11/24/2020#) And (TimeValue(Checkinout.CheckTime) Between "00:00:00" And "05:30:00"));
+
+
+INSERT INTO t_night_shift_entree(UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_entree)
+SELECT Userinfo.Userid AS UserId, Userinfo.Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS H_entree
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And ((t_dept_save.Code)<>'STC') And ((Checkinout.Userid)=Userinfo.Userid) And ((DateValue(Checkinout.CheckTime))=#11/23/2020#) And (TimeValue(Checkinout.CheckTime) Between "17:15:00" And "23:59:59"));
+
+
+
+SELECT e.UserId AS UserId, e.Name AS Name, e.Fonction AS Fonction,e.DeptId,e.Code, e.Dates AS Dates, e.H_entree AS H_entree, s.H_sortie AS H_sortie
+FROM t_night_shift_entree e LEFT JOIN t_night_shift_sortie s ON e.UserId = s.UserId WHERE e.Dates =  '2020-11-23' AND s.Dates =  '2020-11-24'
+
+SELECT TIMEDIFF(ADDTIME(TIMEDIFF("04:55:01", "18:15:50"), "24:00:00"), Pause);
+
+
+INSERT INTO t_h_nuit(UserId, Name, Fonction, DeptId, Code, Dates, H_entree, H_sortie)
+SELECT e.UserId AS UserId, e.Name AS Name, e.Fonction AS Fonction,e.DeptId AS DeptId,e.Code AS DeptId, e.Dates AS Dates, e.H_entree AS H_entree, s.H_sortie AS H_sortie
+FROM t_night_shift_entree e LEFT JOIN t_night_shift_sortie s ON e.UserId = s.UserId WHERE e.Dates =  '2020-11-23' AND s.Dates =  '2020-11-24'
+
+/*de meme*/
+SELECT e.UserId AS UserId, e.Name AS Name, e.Fonction AS Fonction,e.DeptId AS DeptId,e.Code AS DeptId, e.Dates AS Dates, e.H_entree AS H_entree, s.H_sortie AS H_sortie
+FROM t_night_shift_entree e LEFT JOIN t_night_shift_sortie s ON e.UserId = s.UserId 
+WHERE e.Dates =  '2020-11-29' AND s.Dates =  '2020-11-30'
+
+
+UPDATE t_h_nuit SET Pause='01:00:00'
+
+UPDATE t_h_nuit SET P_entree='18:30:00'
+
+UPDATE t_h_nuit SET H_travail=(CASE WHEN H_entree <= P_entree THEN TIMEDIFF(ADDTIME(TIMEDIFF(H_sortie, P_entree), "24:00:00"), Pause) 
+	WHEN H_entree > P_entree THEN TIMEDIFF(ADDTIME(TIMEDIFF(H_sortie, H_entree), "24:00:00"), Pause) END)
+
+
+UPDATE t_h_travail SET P_entree=(CASE WHEN Code='ADM' THEN '08:00:00' ELSE '07:00:00' END) 
+
+
+UPDATE t_h_travail SET P_entree=(CASE
+                                   WHEN Code='ADM' THEN '08:00:00'
+                                   ELSE '07:00:00'
+                                END) ,
+                                P_sortie=(CASE
+                                   WHEN Code='ADM' THEN '16:00:00'
+                                   ELSE '17:45:00'
+                                END)
+
+
+/*tsy mety*/
+SELECT UserId, Name, Fonction, Code, MIN( Dates ) AS Dates_debut, ABS( DATEDIFF( MIN( Dates ) , MAX( Dates ) ) ) AS Nb_jours, WEEK( Dates ) AS Semaine, SEC_TO_TIME( SUM( TIME_TO_SEC( H_travail ) ) ) AS H_semaine FROM t_h_travail WHERE (Dates BETWEEN  '2020-11-23' AND  '2020-11-28') AND UserId='20060' GROUP BY UserId
+SELECT (CASE WHEN (SEC_TO_TIME(SUM(DISTINCT TIME_TO_SEC(H_travail)))>  '40:00:00') THEN UserId END) AS UserId,(CASE WHEN (SEC_TO_TIME(SUM(DISTINCT TIME_TO_SEC(H_travail)))>  '40:00:00') THEN Name END) AS Name,(CASE WHEN (SEC_TO_TIME(SUM(DISTINCT TIME_TO_SEC(H_travail)))>  '40:00:00') THEN Fonction END) AS Fonction,(CASE WHEN (SEC_TO_TIME(SUM(DISTINCT TIME_TO_SEC(H_travail)))>  '40:00:00') THEN Code END) AS Code,(CASE WHEN (SEC_TO_TIME(SUM(DISTINCT TIME_TO_SEC(H_travail)))>  '40:00:00') THEN MIN( Dates ) END) AS Dates_debut,(CASE WHEN (SEC_TO_TIME(SUM(DISTINCT TIME_TO_SEC(H_travail)))>  '40:00:00') THEN ABS( DATEDIFF( MIN( Dates ) , MAX( Dates ) ) ) END) AS Nb_jours,(CASE WHEN (SEC_TO_TIME(SUM(DISTINCT TIME_TO_SEC(H_travail)))>  '40:00:00') THEN WEEK( Dates ) END) AS Semaine, (CASE WHEN (SEC_TO_TIME(SUM(DISTINCT TIME_TO_SEC(H_travail)))>  '40:00:00') THEN TIMEDIFF( SEC_TO_TIME( SUM( DISTINCT TIME_TO_SEC( H_travail ) ) ) ,  '40:00:00' ) END) AS H_semaine
+FROM t_h_travail
+WHERE (
+Dates
+BETWEEN  '2020-11-23'
+AND  '2020-11-28'
+)
+GROUP BY UserId, Name
+
+#######
+SELECT UserId, Name, Fonction, Code, MIN( Dates ) AS Dates_debut, ABS( DATEDIFF( MIN( Dates ) , MAX( Dates ) ) ) AS Nb_jours, WEEK( Dates ) AS Semaine, (SEC_TO_TIME(SUM(DISTINCT TIME_TO_SEC(H_travail)))> '40:00:00') AS H_Semaine
+FROM t_h_travail
+WHERE (Dates BETWEEN  '2020-11-23' AND  '2020-11-28') GROUP BY UserId, Name
+
+
+SELECT UserId, Name, Fonction, DeptId, Code, Effectif, Dates, (CASE WHEN H_sortie>'05:30:00' THEN H_sortie END) AS H_entree, (CASE WHEN H_sortie<'05:30:00' THEN H_sortie) AS H_sortie
+FROM  `t_night_shift_sortie` 
+WHERE Dates =  '2020-11-30'
+UNION DISTINCT
+SELECT UserId, Name, Fonction, DeptId, Code, Effectif, Dates, (CASE WHEN H_entree<'05:30:00' THEN H_entree END) AS H_entree, (CASE WHEN H_entree>'05:30:00' THEN H_entree END) AS H_sortie 
+FROM  `t_night_shift_entree` 
+WHERE Dates =  '2020-11-29'
+/*farany tsy mety*/
+
+
+INSERT INTO t_h_semaine(UserId, Name, Fonction, Code, Dates_debut, Dates_fin, Nb_jours, Semaine, H_semaine)
+SELECT UserId, Name, Fonction, Code, MIN( Dates ) AS Dates_debut, MAX( Dates ) AS Dates_fin, ABS( DATEDIFF( MIN( Dates ) , MAX( Dates ) ) ) AS Nb_jours, WEEK( Dates ) AS Semaine, SEC_TO_TIME( SUM(DISTINCT TIME_TO_SEC( H_travail ) ) ) AS H_semaine FROM t_h_travail WHERE (Dates BETWEEN  '2020-11-23' AND  '2020-11-28')
+GROUP BY UserId, Name
+
+UPDATE t_h_semaine SET H_normale='40:00:00' 
+
+UPDATE `t_h_semaine` SET HS_brut=(CASE WHEN TIMEDIFF(H_semaine, H_normale)>0 THEN TIMEDIFF(H_semaine, H_normale)END)
+
+UPDATE `t_h_semaine` SET `H30%`='08:00:00' 
+
+UPDATE `t_h_semaine` SET `HS_30%`=(CASE WHEN TIMEDIFF(HS_brut, `H30%`)>0 THEN TIMEDIFF(HS_brut, `H30%`) END)
+
+UPDATE `t_h_semaine` SET `H50%`='12:00:00' 
+
+UPDATE `t_h_semaine` SET `HS_50%`=(CASE WHEN TIMEDIFF(`HS_30%`, `H50%`)>0 THEN TIMEDIFF(`HS_30%`, `H50%`) END) 
+
+UPDATE `t_h_semaine` SET H60='60:00:00' 
+
+UPDATE `t_h_semaine` SET HS60=(CASE WHEN H_semaine>'60:00:00' THEN TIMEDIFF(HS_brut, H50+H30) END) 
+
+INSERT INTO t_hs_brut(UserId, Name, Fonction, Code, Dates_debut, Dates_fin, Nb_jours, Semaine, HS_brut)
+SELECT UserId, Name, Fonction, Code, Dates_debut, Dates_fin, Nb_jours, Semaine, TIMEDIFF(H_semaine, '40:00:00') AS HS_brut FROM t_h_semaine WHERE H_semaine>'40:00:00'
+
+/*absence jours */
+SELECT u.UserId FROM t_dept_user u LEFT JOIN t_present_jours p ON p.UserId=u.UserId AND p.Dates='2020-12-05' WHERE p.UserId IS NULL
+
+
+SELECT DISTINCT DeptId as DeptId, Code, Effectif, Dates,(Effectif - COUNT( distinct(UserId) )) as Nb_pres,COUNT( UserId ) as Nb_abs, 
+(((COUNT(UserId))*100)/Effectif) as p_abs FROM  `t_absence_jours` WHERE Dates ='2020-12-14' GROUP BY DeptId 
+
+
+SELECT Checkinout.Userid AS UserId, Min(Userinfo.Name) AS Name, Min(Userinfo.Duty) AS Fonction, Min(Userinfo.Deptid) AS DeptId, Min(t_dept_save.Code) AS Code, Min(t_dept_save.Effectif) AS Effectif, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Min(Checkinout.CheckTime)) AS H_entree, TimeValue(Max(Checkinout.CheckTime)) AS H_sortie, (Format((TimeValue(Max(Checkinout.CheckTime))-TimeValue(Min(Checkinout.CheckTime))),"hh:nn:ss")) AS H_travail
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Checkinout.Userid)=Userinfo.Userid) And ((Userinfo.Deptid)=t_dept_save.DeptId) And (TimeValue((Checkinout.CheckTime))>'05:30:00') And ((DateValue(Checkinout.CheckTime))=(Date()-1)))
+GROUP BY Checkinout.Userid, DateValue(Checkinout.CheckTime);
+
+/*SELECT DISTINCT TimeValue(Checkinout.CheckTime), UserId
+FROM Checkinout
+WHERE ((DateValue(Checkinout.CheckTime)=#12/14/2020#) And Userid='25701');
+UPDATE t_h_semaine SET h_dimanche= (SELECT h_dimanche FROM t_h_dimanche)
+*/
+

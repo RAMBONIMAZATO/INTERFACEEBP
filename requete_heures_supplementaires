@@ -1,0 +1,3 @@
+SELECT * FROM `t_motif` WHERE (UserId='24628' AND (Dates BETWEEN '2020-11-02' AND '2020-11-03'))
+
+SELECT * FROM  `t_motif`  WHERE Obs =  'night shift' AND Dates BETWEEN  '2020-10-26' AND  '2020-10-27'

@@ -1,0 +1,23 @@
+/*HEURES NIGHT SHIFT ENTREE*/
+
+INSERT INTO t_night_shift_entree(UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_entree)
+SELECT Userinfo.Userid AS UserId, Userinfo.Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS H_entree
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And ((t_dept_save.Code)<>'STC') And ((Checkinout.Userid)=Userinfo.Userid) And ((DateValue(Checkinout.CheckTime))=#10/26/2020#) And TimeValue(Checkinout.CheckTime)>="17:00:00");
+
+
+
+/* HEURES NIGHT SHIFT SORTIE*/
+INSERT INTO t_night_shift_sortie(UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_sortie)
+SELECT Userinfo.Userid AS UserId, Userinfo.Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS H_sortie
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And ((t_dept_save.Code)<>'STC') And ((Checkinout.Userid)=Userinfo.Userid) And ((DateValue(Checkinout.CheckTime))=#10/27/2020#) And TimeValue(Checkinout.CheckTime)<="05:30:00"
+);
+
+
+
+/*HEURES NIGHT SHIFT ENTREE SORTIE*/
+
+SELECT e.UserId, e.Name, e.Fonction, e.DeptId, e.Code, e.Effectif, e.Dates AS Dates_debut, s.Dates AS Dates_fin, e.H_entree, s.H_sortie
+FROM t_night_shift_entree e LEFT JOIN t_night_shift_sortie s ON e.UserId = s.UserId
+WHERE e.Dates='2020-10-26' AND s.Dates='2020-10-27'

@@ -1,0 +1,364 @@
+
+
+            /*echo $StartDate;
+            SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, j.Dates AS Dates, j.H_travail AS H_jours, n.H_travail AS H_nuit, 
+            (CASE WHEN c.Obs='conge' THEN '08:00:00' END) AS H_conge, (CASE WHEN r.Obs='repos medical' THEN '08:00:00' END) AS H_repos, (CASE WHEN p.Obs='permission' THEN '08:00:00' END) AS H_permission,
+            (CASE WHEN abs.Obs='absence autorise' THEN '08:00:00' END) AS H_autoabs, (CASE WHEN com.Obs='comission' THEN '08:00:00' END) AS H_commission, (CASE WHEN m.Obs='miseapied' THEN '08:00:00' END) AS H_miseapied
+            FROM t_dept_user t
+            LEFT JOIN t_h_travail j ON t.UserId = j.UserId AND j.Dates='2020-12-28' 
+            LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND j.Dates=n.Dates
+            LEFT JOIN t_motif c ON t.UserId=c.UserId AND c.Obs='conge' AND c.Dates='2020-12-28'
+            LEFT JOIN t_motif r ON t.UserId=r.UserId AND r.Obs='repos medical' AND r.Dates='2020-12-28'
+            LEFT JOIN t_motif p ON t.UserId=p.UserId AND p.Obs='permission' AND p.Dates='2020-12-28'
+            LEFT JOIN t_motif abs ON t.UserId=abs.UserId AND abs.Obs='absence autorise' AND abs.Dates='2020-12-28'
+            LEFT JOIN t_motif com ON t.UserId=com.UserId AND com.Obs='comission' AND com.Dates='2020-12-28'
+            LEFT JOIN t_motif m ON t.UserId=m.UserId AND m.Obs='miseapied' AND m.Dates='2020-12-28'
+            WHERE j.Dates='2020-12-28' GROUP BY t.UserId, t.Name
+
+
+            SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, j.Dates AS Dates, j.H_travail AS H_jours, n.H_travail AS H_nuit, 
+            (CASE WHEN c.Obs='conge' THEN '08:00:00' END) AS H_conge
+            FROM t_dept_user t
+            LEFT JOIN t_h_travail j ON t.UserId = j.UserId AND j.Dates='2020-12-28' 
+            LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND j.Dates=n.Dates
+            LEFT JOIN t_motif c ON t.UserId=c.UserId AND c.Obs='conge' AND c.Dates='2020-12-28'
+            WHERE j.Dates='2020-12-28' AND c.Obs IS NOT NULL GROUP BY t.UserId, t.Name
+
+
+            SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, j.Dates AS Dates, j.H_travail AS H_jours, n.H_travail AS H_nuit, 
+            (CASE WHEN c.Obs='conge' THEN '08:00:00' END) AS H_conge, (CASE WHEN r.Obs='repos medical' THEN '08:00:00' END) AS H_repos, (CASE WHEN p.Obs='permission' THEN '08:00:00' END) AS H_permission,
+            (CASE WHEN abs.Obs='absence autorise' THEN '08:00:00' END) AS H_autoabs, (CASE WHEN com.Obs='comission' THEN '08:00:00' END) AS H_commission, (CASE WHEN m.Obs='miseapied' THEN '08:00:00' END) AS H_miseapied
+            FROM t_dept_user t
+            LEFT JOIN t_h_travail j ON t.UserId = j.UserId AND j.Dates='2020-12-28' 
+            LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND j.Dates=n.Dates
+            LEFT JOIN t_motif c ON t.UserId=c.UserId AND c.Obs='conge' AND c.Dates='2020-12-28'
+            LEFT JOIN t_motif r ON t.UserId=r.UserId AND r.Obs='repos medical' AND r.Dates='2020-12-28'
+            LEFT JOIN t_motif p ON t.UserId=p.UserId AND p.Obs='permission' AND p.Dates='2020-12-28'
+            LEFT JOIN t_motif abs ON t.UserId=abs.UserId AND abs.Obs='absence autorise' AND abs.Dates='2020-12-28'
+            LEFT JOIN t_motif com ON t.UserId=com.UserId AND com.Obs='comission' AND com.Dates='2020-12-28'
+            LEFT JOIN t_motif m ON t.UserId=m.UserId AND m.Obs='miseapied' AND m.Dates='2020-12-28'
+            WHERE j.Dates='2020-12-28' AND (c.Obs IS NOT NULL OR r.Obs IS NOT NULL OR p.Obs IS NOT NULL OR abs.Obs IS NOT NULL OR com.Obs IS NOT NULL OR m.Obs IS NOT NULL)GROUP BY t.UserId, t.Name
+
+
+            SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, j.Dates AS Dates, j.H_travail AS H_jours, n.H_travail AS H_nuit, 
+            (CASE WHEN c.Obs='conge' THEN '08:00:00' END) AS H_conge, (CASE WHEN r.Obs='repos medical' THEN '08:00:00' END) AS H_repos, (CASE WHEN p.Obs='permission' THEN '08:00:00' END) AS H_permission,
+            (CASE WHEN abs.Obs='absence autorise' THEN '08:00:00' END) AS H_autoabs, (CASE WHEN com.Obs='comission' THEN '08:00:00' END) AS H_commission, (CASE WHEN m.Obs='miseapied' THEN '08:00:00' END) AS H_miseapied
+            FROM t_dept_user t
+            LEFT JOIN t_h_travail j ON t.UserId = j.UserId AND j.Dates='2020-12-28'
+            LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND j.Dates=n.Dates
+            LEFT JOIN t_motif c ON t.UserId=c.UserId AND c.Obs='conge' AND c.Dates=j.Dates
+            LEFT JOIN t_motif r ON t.UserId=r.UserId AND r.Obs='repos medical' AND r.Dates=j.Dates
+            LEFT JOIN t_motif p ON t.UserId=p.UserId AND p.Obs='permission' AND p.Dates=j.Dates
+            LEFT JOIN t_motif abs ON t.UserId=abs.UserId AND abs.Obs='absence autorise' AND abs.Dates=j.Dates
+            LEFT JOIN t_motif com ON t.UserId=com.UserId AND com.Obs='comission' AND com.Dates=j.Dates
+            LEFT JOIN t_motif m ON t.UserId=m.UserId AND m.Obs='miseapied' AND m.Dates=j.Dates
+            WHERE j.Dates='2020-12-28' AND (c.Obs IS NOT NULL OR r.Obs IS NOT NULL OR p.Obs IS NOT NULL OR abs.Obs IS NOT NULL OR com.Obs IS NOT NULL OR m.Obs IS NOT NULL)
+            GROUP BY t.UserId, t.Name
+
+            SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, Dates, 
+            (CASE WHEN c.Obs='conge' THEN '08:00:00' END) AS H_conge, (CASE WHEN r.Obs='repos medical' THEN '08:00:00' END) AS H_repos, (CASE WHEN p.Obs='permission' THEN '08:00:00' END) AS H_permission,
+            (CASE WHEN abs.Obs='absence autorise' THEN '08:00:00' END) AS H_autoabs, (CASE WHEN com.Obs='comission' THEN '08:00:00' END) AS H_commission, (CASE WHEN m.Obs='miseapied' THEN '08:00:00' END) AS H_miseapied
+            FROM t_dept_user t
+            LEFT JOIN t_motif c ON t.UserId=c.UserId AND c.Obs='conge' AND c.Dates='2020-12-28'
+            LEFT JOIN t_motif r ON t.UserId=r.UserId AND r.Obs='repos medical' AND r.Dates='2020-12-28'
+            LEFT JOIN t_motif p ON t.UserId=p.UserId AND p.Obs='permission' AND p.Dates='2020-12-28'
+            LEFT JOIN t_motif abs ON t.UserId=abs.UserId AND abs.Obs='absence autorise' AND abs.Dates='2020-12-28'
+            LEFT JOIN t_motif com ON t.UserId=com.UserId AND com.Obs='comission' AND com.Dates='2020-12-28'
+            LEFT JOIN t_motif m ON t.UserId=m.UserId AND m.Obs='miseapied' AND m.Dates='2020-12-28'
+            WHERE Dates='2020-12-28' AND (c.Obs IS NOT NULL OR r.Obs IS NOT NULL OR p.Obs IS NOT NULL OR abs.Obs IS NOT NULL OR com.Obs IS NOT NULL OR m.Obs IS NOT NULL)
+            GROUP BY t.UserId, t.Name
+            */
+           /* $q_j_n="INSERT INTO t_jours_nuit_ferie_dimanche(UserId, Name,Fonction, DeptId, Code, Dates, H_jours, H_nuit)
+            SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, j.Dates AS Dates, j.H_travail AS H_jours, n.H_travail AS H_nuit
+            FROM t_dept_user t
+            LEFT JOIN t_h_travail j ON t.UserId = j.UserId AND j.Dates='$StartDate' 
+            LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND j.Dates=n.Dates
+            WHERE j.Dates='$StartDate' GROUP BY t.UserId, t.Name";
+            
+
+            SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, j.Dates AS Dates, j.H_travail AS H_jours, n.H_travail AS H_nuit, 
+            (CASE WHEN c.Obs='conge' THEN '08:00:00' END) AS H_conge, (CASE WHEN r.Obs='repos medical' THEN '08:00:00' END) AS H_repos, (CASE WHEN p.Obs='permission' THEN '08:00:00' END) AS H_permission,
+            (CASE WHEN abs.Obs='absence autorise' THEN '08:00:00' END) AS H_autoabs, (CASE WHEN com.Obs='comission' THEN '08:00:00' END) AS H_commission, (CASE WHEN m.Obs='miseapied' THEN '08:00:00' END) AS H_miseapied
+            FROM t_dept_user t
+            LEFT JOIN t_h_travail j ON t.UserId = j.UserId AND j.Dates='2020-11-25'
+            LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND j.Dates=n.Dates
+            LEFT JOIN t_motif c ON t.UserId=c.UserId AND c.Obs='conge' AND c.Dates=j.Dates
+            LEFT JOIN t_motif r ON t.UserId=r.UserId AND r.Obs='repos medical' AND r.Dates=j.Dates
+            LEFT JOIN t_motif p ON t.UserId=p.UserId AND p.Obs='permission' AND p.Dates=j.Dates
+            LEFT JOIN t_motif abs ON t.UserId=abs.UserId AND abs.Obs='absence autorise' AND abs.Dates=j.Dates
+            LEFT JOIN t_motif com ON t.UserId=com.UserId AND com.Obs='comission' AND com.Dates=j.Dates
+            LEFT JOIN t_motif m ON t.UserId=m.UserId AND m.Obs='miseapied' AND m.Dates=j.Dates
+            WHERE j.Dates='2020-11-25' AND t.UserId='20022'
+            GROUP BY t.UserId, t.Name
+            */
+            /* SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code,j.Dates AS D1, n.Dates AS D2, c.Dates AS D3, r.Dates AS D4, p.Dates AS D5, abs.Dates AS D6, com.Dates AS D7, m.Dates AS D8,j.H_travail AS H_jours, n.H_travail AS H_nuit, 
+            (CASE WHEN c.Obs='conge' THEN '08:00:00' END) AS H_conge, (CASE WHEN r.Obs='repos medical' THEN '08:00:00' END) AS H_repos, 
+            (CASE WHEN p.Obs='permission' THEN '08:00:00' END) AS H_permission,
+            (CASE WHEN abs.Obs='absence autorise' THEN '08:00:00' END) AS H_autoabs, 
+            (CASE WHEN com.Obs='comission' THEN '08:00:00' END) AS H_commission, 
+            (CASE WHEN m.Obs='miseapied' THEN '08:00:00' END) AS H_miseapied
+            FROM t_dept_user t
+            LEFT JOIN t_h_travail j ON t.UserId = j.UserId AND j.Dates='2020-11-25'
+            LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND j.Dates='2020-11-25'
+            LEFT JOIN t_motif c ON t.UserId=c.UserId AND c.Obs='conge' AND c.Dates='2020-11-25'
+            LEFT JOIN t_motif r ON t.UserId=r.UserId AND r.Obs='repos medical' AND r.Dates='2020-11-25'
+            LEFT JOIN t_motif p ON t.UserId=p.UserId AND p.Obs='permission' AND p.Dates='2020-11-25'
+            LEFT JOIN t_motif abs ON t.UserId=abs.UserId AND abs.Obs='absence autorise' AND abs.Dates='2020-11-25'
+            LEFT JOIN t_motif com ON t.UserId=com.UserId AND com.Obs='comission' AND com.Dates='2020-11-25'
+            LEFT JOIN t_motif m ON t.UserId=m.UserId AND m.Obs='miseapied' AND m.Dates='2020-11-25'
+            WHERE (j.Dates='2020-11-25' OR n.Dates= '2020-11-25' OR c.Dates='2020-11-25' OR r.Dates='2020-11-25' OR p.Dates='2020-11-25' OR abs.Dates='2020-11-25' OR com.Dates='2020-11-25' OR m.Dates='2020-11-25') AND t.UserId='20022'
+            GROUP BY t.UserId, t.Name*/
+/*            $q_j_n="INSERT INTO t_jours_nuit_ferie_dimanche(UserId, Name,Fonction, DeptId, Code,Dates, H_jours, H_nuit, H_conge, H_repos, H_permission, H_autoabs, H_commission, H_miseapied)
+            SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, 
+            (CASE 
+                WHEN j.Dates IS NOT NULL THEN j.Dates
+                WHEN n.Dates IS NOT NULL THEN n.Dates
+                WHEN c.Dates IS NOT NULL THEN c.Dates
+                WHEN r.Dates IS NOT NULL THEN r.Dates
+                WHEN p.Dates IS NOT NULL THEN p.Dates
+                WHEN abs.Dates IS NOT NULL THEN abs.Dates
+                WHEN com.Dates IS NOT NULL THEN com.Dates
+                WHEN m.Dates IS NOT NULL THEN m.Dates
+            END) AS Dates, 
+            j.H_travail AS H_jours, n.H_travail AS H_nuit, c.H_conge AS H_conge, r.H_repos AS H_repos, p.H_permission AS H_permission, abs.H_autoabs AS H_autoabs, com.H_commission AS H_commission, m.H_miseapied AS H_miseapied
+            FROM t_dept_user t
+            LEFT JOIN t_h_travail j ON t.UserId = j.UserId AND j.Dates='$StartDate'
+            LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND n.Dates='$StartDate'
+            LEFT JOIN t_h_conge c ON t.UserId=c.UserId AND c.Dates='$StartDate'
+            LEFT JOIN t_h_repos r ON t.UserId=r.UserId AND r.Dates='$StartDate'
+            LEFT JOIN t_h_permission p ON t.UserId=p.UserId AND p.Dates='$StartDate'
+            LEFT JOIN t_h_autoabs abs ON t.UserId=abs.UserId AND abs.Dates='$StartDate'
+            LEFT JOIN t_h_commission com ON t.UserId=com.UserId AND com.Dates='$StartDate'
+            LEFT JOIN t_h_miseapied m ON t.UserId=m.UserId AND m.Dates='$StartDate'
+            GROUP BY t.UserId, t.Name";
+$query="SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, j.H_travail AS H_jours, n.H_travail AS H_nuit, c.H_conge AS H_conge, r.H_repos AS H_repos, p.H_permission AS H_permission, abs.H_autoabs AS H_autoabs, com.H_commission AS H_commission, m.H_miseapied AS H_miseapied
+FROM t_dept_user t
+LEFT JOIN t_h_travail j ON t.UserId = j.UserId AND j.Dates='2020-11-23'
+LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND n.Dates='2020-11-23'
+LEFT JOIN t_h_conge c ON t.UserId=c.UserId AND c.Dates='2020-11-23'
+LEFT JOIN t_h_repos r ON t.UserId=r.UserId AND r.Dates='2020-11-23'
+LEFT JOIN t_h_permission p ON t.UserId=p.UserId AND p.Dates='2020-11-23'
+LEFT JOIN t_h_autoabs abs ON t.UserId=abs.UserId AND abs.Dates='2020-11-23'
+LEFT JOIN t_h_commission com ON t.UserId=com.UserId AND com.Dates='2020-11-23'
+LEFT JOIN t_h_miseapied m ON t.UserId=m.UserId AND m.Dates='2020-11-23'
+GROUP BY t.UserId, t.Name";*/
+
+
+    /*$q_d_n="INSERT INTO t_jours_nuit_ferie_dimanche(UserId, Name,Fonction, DeptId, Code, Dates, H_jours, H_nuit, H_dimanche)
+    SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, j.Dates AS Dates,j.H_travail AS H_jours, n.H_travail AS H_nuit, j.H_travail AS H_dimanche
+    FROM t_dept_user t
+    LEFT JOIN t_h_travail j ON t.UserId = j.UserId AND j.Dates='$StartDateDimanche' 
+    LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND j.Dates=n.Dates
+    WHERE j.Dates='$StartDateDimanche' GROUP BY t.UserId, t.Name";*/
+
+/*            $q_d_n="INSERT INTO t_jours_nuit_ferie_dimanche(UserId, Name,Fonction, DeptId, Code, Dates, H_jours, H_nuit, H_dimanche, H_conge, H_repos, H_permission, H_autoabs, H_commission, H_miseapied)
+            SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, j.Dates AS Dates, j.H_travail AS H_jours, n.H_travail AS H_nuit, j.H_travail AS H_dimanche,
+            (CASE WHEN c.Obs='conge' THEN '08:00:00' END) AS H_conge, (CASE WHEN r.Obs='repos medical' THEN '08:00:00' END) AS H_repos, (CASE WHEN p.Obs='permission' THEN '08:00:00' END) AS H_permission,
+            (CASE WHEN abs.Obs='absence autorise' THEN '08:00:00' END) AS H_autoabs, (CASE WHEN com.Obs='comission' THEN '08:00:00' END) AS H_commission, (CASE WHEN m.Obs='miseapied' THEN '08:00:00' END) AS H_miseapied
+            FROM t_dept_user t
+            LEFT JOIN t_h_travail j ON t.UserId = j.UserId AND j.Dates='$StartDateDimanche'
+            LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND j.Dates=n.Dates
+            LEFT JOIN t_motif c ON t.UserId=c.UserId AND c.Obs='conge' AND c.Dates=j.Dates
+            LEFT JOIN t_motif r ON t.UserId=r.UserId AND r.Obs='repos medical' AND r.Dates=j.Dates
+            LEFT JOIN t_motif p ON t.UserId=p.UserId AND p.Obs='permission' AND p.Dates=j.Dates
+            LEFT JOIN t_motif abs ON t.UserId=abs.UserId AND abs.Obs='absence autorise' AND abs.Dates=j.Dates
+            LEFT JOIN t_motif com ON t.UserId=com.UserId AND com.Obs='comission' AND com.Dates=j.Dates
+            LEFT JOIN t_motif m ON t.UserId=m.UserId AND m.Obs='miseapied' AND m.Dates=j.Dates
+            WHERE j.Dates='$StartDateDimanche'
+            GROUP BY t.UserId, t.Name";
+            $r_q_d_n=mysqli_query($connection, $q_d_n);*/
+
+            /*echo $StartDateFerie;*/
+            /*$q_f_n="INSERT INTO t_jours_nuit_ferie_dimanche(UserId, Name,Fonction, DeptId, Code, Dates, H_jours, H_nuit, H_ferie)
+            SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, j.Dates AS Dates,j.H_travail AS H_jours, n.H_travail AS H_nuit, j.H_travail AS H_ferie
+            FROM t_dept_user t
+            LEFT JOIN t_h_travail j ON t.UserId = j.UserId AND j.Dates='$StartDateFerie' 
+            LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND j.Dates=n.Dates
+            WHERE j.Dates='$StartDateFerie' GROUP BY t.UserId, t.Name";*/
+            
+
+/*            $q_f_n="INSERT INTO t_jours_nuit_ferie_dimanche(UserId, Name,Fonction, DeptId, Code, Dates, H_jours, H_nuit, H_ferie, H_conge, H_repos, H_permission, H_autoabs, H_commission, H_miseapied)
+            SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, j.Dates AS Dates, j.H_travail AS H_jours, n.H_travail AS H_nuit, j.H_travail AS H_ferie,
+            (CASE WHEN c.Obs='conge' THEN '08:00:00' END) AS H_conge, (CASE WHEN r.Obs='repos medical' THEN '08:00:00' END) AS H_repos, (CASE WHEN p.Obs='permission' THEN '08:00:00' END) AS H_permission,
+            (CASE WHEN abs.Obs='absence autorise' THEN '08:00:00' END) AS H_autoabs, (CASE WHEN com.Obs='comission' THEN '08:00:00' END) AS H_commission, (CASE WHEN m.Obs='miseapied' THEN '08:00:00' END) AS H_miseapied
+            FROM t_dept_user t
+            LEFT JOIN t_h_travail j ON t.UserId = j.UserId AND j.Dates='$StartDateFerie'
+            LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND j.Dates=n.Dates
+            LEFT JOIN t_motif c ON t.UserId=c.UserId AND c.Obs='conge' AND c.Dates=j.Dates
+            LEFT JOIN t_motif r ON t.UserId=r.UserId AND r.Obs='repos medical' AND r.Dates=j.Dates
+            LEFT JOIN t_motif p ON t.UserId=p.UserId AND p.Obs='permission' AND p.Dates=j.Dates
+            LEFT JOIN t_motif abs ON t.UserId=abs.UserId AND abs.Obs='absence autorise' AND abs.Dates=j.Dates
+            LEFT JOIN t_motif com ON t.UserId=com.UserId AND com.Obs='comission' AND com.Dates=j.Dates
+            LEFT JOIN t_motif m ON t.UserId=m.UserId AND m.Obs='miseapied' AND m.Dates=j.Dates
+            WHERE j.Dates='$StartDateFerie'
+            GROUP BY t.UserId, t.Name";
+            $r_q_f_n=mysqli_query($connection, $q_f_n);*/
+SELECT UserId, Name, Fonction, DeptId, Code, Dates, '08:00:00' AS H_conge FROM t_motif WHERE Obs='conge' AND Dates='2020-11-23'
+
+INSERT INTO t_h_conge(UserId, Name, Fonction, DeptId, Code, Dates, H_conge)
+SELECT UserId, Name, Fonction, DeptId, Code, Dates, '08:00:00' AS H_conge FROM t_motif WHERE Obs='conge' AND Dates='2020-11-23'
+
+
+INSERT INTO t_h_repos(UserId, Name, Fonction, DeptId, Code, Dates, H_repos)
+SELECT UserId, Name, Fonction, DeptId, Code, Dates, '08:00:00' AS H_repos FROM t_motif WHERE Obs='repos' AND Dates='2020-11-23'
+
+INSERT INTO t_h_permission(UserId, Name, Fonction, DeptId, Code, Dates, H_permission)
+SELECT UserId, Name, Fonction, DeptId, Code, Dates, '08:00:00' AS H_permission FROM t_motif WHERE Obs='permission' AND Dates='2020-11-23'
+
+INSERT INTO t_h_autoabs(UserId, Name, Fonction, DeptId, Code, Dates, H_autoabs)
+SELECT UserId, Name, Fonction, DeptId, Code, Dates, '08:00:00' AS H_autoabs FROM t_motif WHERE Obs='absence autorise' AND Dates='2020-11-23'
+
+
+INSERT INTO t_h_commission(UserId, Name, Fonction, DeptId, Code, Dates, H_commission)
+SELECT UserId, Name, Fonction, DeptId, Code, Dates, '08:00:00' AS H_commission FROM t_motif WHERE Obs='comission' AND Dates='2020-11-23'
+
+INSERT INTO t_h_miseapied(UserId, Name, Fonction, DeptId, Code,Dates, H_miseapied)
+SELECT UserId, Name, Fonction, DeptId, Code, Dates, '08:00:00' AS H_miseapied FROM t_motif WHERE Obs='miseapied' AND Dates='2020-11-23'
+
+
+SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, c.H_conge AS H_conge FROM t_dept_user t 
+LEFT JOIN t_h_conge c ON t.UserId=c.UserId AND c.Dates='2020-11-23'
+GROUP BY t.UserId
+
+SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, c.H_conge AS H_conge FROM t_dept_user t 
+LEFT JOIN t_h_conge c ON t.UserId=c.UserId AND c.Dates='2020-11-23'
+WHERE H_conge IS NOT NULL
+GROUP BY t.UserId
+
+
+SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, c.H_conge AS H_conge, r.H_repos AS H_repos, p.H_permission AS H_permission,
+abs.H_autoabs AS H_autoabs, com.H_commission AS H_commission, m.H_miseapied AS H_miseapied FROM t_dept_user t 
+LEFT JOIN t_h_conge c ON t.UserId=c.UserId AND c.Dates='2020-11-23'
+LEFT JOIN t_h_repos r ON t.UserId=r.UserId AND r.Dates='2020-11-23'
+LEFT JOIN t_h_permission p ON t.UserId=p.UserId AND p.Dates='2020-11-23'
+LEFT JOIN t_h_autoabs abs ON t.UserId=abs.UserId AND abs.Dates='2020-11-23'
+LEFT JOIN t_h_commission com ON t.UserId=com.UserId AND com.Dates='2020-11-23'
+LEFT JOIN t_h_miseapied m ON t.UserId=m.UserId AND m.Dates='2020-11-23'
+GROUP BY t.UserId
+
+SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, c.H_conge AS H_conge, r.H_repos AS H_repos, p.H_permission AS H_permission,
+abs.H_autoabs AS H_autoabs, com.H_commission AS H_commission, m.H_miseapied AS H_miseapied FROM t_dept_user t 
+LEFT JOIN t_h_conge c ON t.UserId=c.UserId AND c.Dates='2020-11-23'
+LEFT JOIN t_h_repos r ON t.UserId=r.UserId AND r.Dates='2020-11-23'
+LEFT JOIN t_h_permission p ON t.UserId=p.UserId AND p.Dates='2020-11-23'
+LEFT JOIN t_h_autoabs abs ON t.UserId=abs.UserId AND abs.Dates='2020-11-23'
+LEFT JOIN t_h_commission com ON t.UserId=com.UserId AND com.Dates='2020-11-23'
+LEFT JOIN t_h_miseapied m ON t.UserId=m.UserId AND m.Dates='2020-11-23'
+WHERE (H_conge IS NOT NULL OR H_repos IS NOT NULL OR H_permission IS NOT NULL OR H_autoabs IS NOT NULL OR H_commission IS NOT NULL OR H_miseapied IS NOT NULL)
+GROUP BY t.UserId
+
+/*tsy mety*/
+SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, j.H_travail AS H_travail, n.H_travail AS H_nuit, c.H_conge AS H_conge, r.H_repos AS H_repos, p.H_permission AS H_permission,
+abs.H_autoabs AS H_autoabs, com.H_commission AS H_commission, m.H_miseapied AS H_miseapied FROM t_dept_user t 
+LEFT JOIN t_h_conge c ON t.UserId=c.UserId AND c.Dates='2020-11-23'
+LEFT JOIN t_h_repos r ON t.UserId=r.UserId AND r.Dates='2020-11-23'
+LEFT JOIN t_h_permission p ON t.UserId=p.UserId AND p.Dates='2020-11-23'
+LEFT JOIN t_h_autoabs abs ON t.UserId=abs.UserId AND abs.Dates='2020-11-23'
+LEFT JOIN t_h_commission com ON t.UserId=com.UserId AND com.Dates='2020-11-23'
+LEFT JOIN t_h_miseapied m ON t.UserId=m.UserId AND m.Dates='2020-11-23'
+LEFT JOIN t_h_travail j ON t.UserId=j.UserId AND j.Dates='2020-11-23'
+LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND n.Dates='2020-11-23'
+GROUP BY t.UserId
+/*tapitra ny tsy mety*/
+/*delete multiple*/
+DELETE FROM `ebp`.`t_h_conge` WHERE `t_h_conge`.`UserId` = 21654 AND `t_h_conge`.`Name` = 'RANDRIAMAZAVA SAHOLY MAVOSOA' AND `t_h_conge`.`Fonction` IS NULL AND `t_h_conge`.`DeptId` = 57 AND `t_h_conge`.`Code` = 'LN12' AND `t_h_conge`.`Dates` IS NULL AND `t_h_conge`.`H_conge` = '08:00:00' LIMIT 1;
+DELETE FROM `ebp`.`t_h_conge` WHERE `t_h_conge`.`UserId` = 22069 AND `t_h_conge`.`Name` = 'RANDRIAMBOAVONJY TAHINA SEDSON' AND `t_h_conge`.`Fonction` IS NULL AND `t_h_conge`.`DeptId` = 45 AND `t_h_conge`.`Code` = 'FNT' AND `t_h_conge`.`Dates` IS NULL AND `t_h_conge`.`H_conge` = '08:00:00' LIMIT 1;
+DELETE FROM `ebp`.`t_h_conge` WHERE `t_h_conge`.`UserId` = 23167 AND `t_h_conge`.`Name` = 'RANDRIAMALALA MANAMPY HARIMINO' AND `t_h_conge`.`Fonction` IS NULL AND `t_h_conge`.`DeptId` = 100 AND `t_h_conge`.`Code` = 'FNTLO' AND `t_h_conge`.`Dates` IS NULL AND `t_h_conge`.`H_conge` = '08:00:00' LIMIT 1;
+DELETE FROM `ebp`.`t_h_conge` WHERE `t_h_conge`.`UserId` = 23442 AND `t_h_conge`.`Name` = 'NOMENDRAZA JEAN LUC' AND `t_h_conge`.`Fonction` IS NULL AND `t_h_conge`.`DeptId` = 36 AND `t_h_conge`.`Code` = 'LN1' AND `t_h_conge`.`Dates` IS NULL AND `t_h_conge`.`H_conge` = '08:00:00' LIMIT 1;
+DELETE FROM `ebp`.`t_h_conge` WHERE `t_h_conge`.`UserId` = 23851 AND `t_h_conge`.`Name` = 'RAVELOMANANTSOA TOJO ANDRIAMBO' AND `t_h_conge`.`Fonction` IS NULL AND `t_h_conge`.`DeptId` = 23 AND `t_h_conge`.`Code` = 'QA' AND `t_h_conge`.`Dates` IS NULL AND `t_h_conge`.`H_conge` = '08:00:00' LIMIT 1;
+DELETE FROM `ebp`.`t_h_conge` WHERE `t_h_conge`.`UserId` = 23925 AND `t_h_conge`.`Name` = 'MIALIARINIRY RAVO MARIETTE' AND `t_h_conge`.`Fonction` IS NULL AND `t_h_conge`.`DeptId` = 45 AND `t_h_conge`.`Code` = 'FNT' AND `t_h_conge`.`Dates` IS NULL AND `t_h_conge`.`H_conge` = '08:00:00' LIMIT 1;
+DELETE FROM `ebp`.`t_h_conge` WHERE `t_h_conge`.`UserId` = 24537 AND `t_h_conge`.`Name` = 'RAKOTONDRALITSIMA SOLONIRINA P' AND `t_h_conge`.`Fonction` IS NULL AND `t_h_conge`.`DeptId` = 38 AND `t_h_conge`.`Code` = 'MNT' AND `t_h_conge`.`Dates` IS NULL AND `t_h_conge`.`H_conge` = '08:00:00' LIMIT 1;
+DELETE FROM `ebp`.`t_h_conge` WHERE `t_h_conge`.`UserId` = 25497 AND `t_h_conge`.`Name` = 'RAFARAMALALA SALOHINIAINA SOLA' AND `t_h_conge`.`Fonction` IS NULL AND `t_h_conge`.`DeptId` = 69 AND `t_h_conge`.`Code` = 'LN17' AND `t_h_conge`.`Dates` IS NULL AND `t_h_conge`.`H_conge` = '08:00:00' LIMIT 1;
+/*end delete multiple*/
+
+INSERT INTO t_jours_conge(UserId, Name, Fonction, DeptId, Code, Dates, H_conge, H_repos, H_permission, H_autoabs, H_commission, H_miseapied)
+SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, 
+(CASE 
+    WHEN c.Dates IS NOT NULL THEN c.Dates
+    WHEN r.Dates IS NOT NULL THEN r.Dates
+    WHEN p.Dates IS NOT NULL THEN p.Dates
+    WHEN abs.Dates IS NOT NULL THEN abs.Dates
+    WHEN com.Dates IS NOT NULL THEN com.Dates
+    WHEN m.Dates IS NOT NULL THEN m.Dates
+END) AS Dates
+,c.H_conge AS H_conge, r.H_repos AS H_repos, p.H_permission AS H_permission,
+abs.H_autoabs AS H_autoabs, com.H_commission AS H_commission, m.H_miseapied AS H_miseapied FROM t_dept_user t 
+LEFT JOIN t_h_conge c ON t.UserId=c.UserId AND c.Dates='2020-11-25'
+LEFT JOIN t_h_repos r ON t.UserId=r.UserId AND r.Dates='2020-11-25'
+LEFT JOIN t_h_permission p ON t.UserId=p.UserId AND p.Dates='2020-11-25'
+LEFT JOIN t_h_autoabs abs ON t.UserId=abs.UserId AND abs.Dates='2020-11-25'
+LEFT JOIN t_h_commission com ON t.UserId=com.UserId AND com.Dates='2020-11-25'
+LEFT JOIN t_h_miseapied m ON t.UserId=m.UserId AND m.Dates='2020-11-25'
+WHERE (H_conge IS NOT NULL OR H_repos IS NOT NULL OR H_permission IS NOT NULL OR H_autoabs IS NOT NULL OR H_commission IS NOT NULL OR H_miseapied IS NOT NULL)
+GROUP BY t.UserId
+
+SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, j.H_travail AS H_travail, n.H_travail AS H_nuit
+FROM t_dept_user t 
+LEFT JOIN t_h_travail j ON t.UserId=j.UserId AND j.Dates='2020-11-23'
+LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND n.Dates='2020-11-23'
+GROUP BY t.UserId
+
+/*SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, j.H_travail AS H_travail, n.H_travail AS H_nuit
+FROM t_dept_user t 
+LEFT JOIN t_h_travail j ON t.UserId=j.UserId AND j.Dates='2020-11-23'
+LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND n.Dates=j.Dates
+WHERE j.Dates='2020-11-23' AND n.H_travail IS NULL AND j.H_travail IS NULL
+GROUP BY t.UserId*/
+
+
+INSERT INTO t_jours_nuit(UserId, Name, Fonction, DeptId, Code, Dates, H_jours, H_nuit, H_ferie, H_dimanche)
+SELECT `UserId`, `Name`, `Fonction`, `DeptId`, `Code`, `Dates`, `H_jours`, `H_nuit`, `H_ferie`, `H_dimanche`
+FROM `t_jours_nuit_ferie_dimanche` WHERE 1
+
+/*6*/
+SELECT j.UserId, j.Name, j.Fonction, j.DeptId, j.Code, j.Dates, j.H_jours, j.H_nuit, j.H_ferie, j.H_dimanche,
+c.H_conge, c.H_repos, c.H_permission, c.H_autoabs, c.H_commission, c.H_miseapied
+FROM t_jours_nuit j 
+LEFT JOIN t_jours_conge c ON j.UserId=c.UserId AND c.Dates=j.Dates
+WHERE (c.H_conge IS NOT NULL OR c.H_repos IS NOT NULL OR c.H_autoabs IS NOT NULL OR c.H_commission IS NOT NULL OR c.H_miseapied IS NOT NULL)
+AND j.Dates='2020-11-23'
+GROUP BY j.UserId
+/*6*/
+
+/*21*/
+SELECT * FROM `t_jours_conge` WHERE Dates='2020-11-23' AND (H_conge IS NOT NULL OR H_repos IS NOT NULL OR H_permission IS NOT NULL OR H_autoabs IS NOT NULL OR H_commission IS NOT NULL OR H_miseapied IS NOT NULL)
+
+SELECT * FROM `t_jours_nuit_ferie_dimanche` WHERE Dates='2020-11-23' AND (H_conge IS NOT NULL OR H_repos IS NOT NULL OR H_permission IS NOT NULL OR H_autoabs IS NOT NULL OR H_commission IS NOT NULL OR H_miseapied IS NOT NULL)
+/*21*/
+
+/*4*/
+SELECT * FROM `t_jours_conge` WHERE Dates='2020-11-23' AND H_conge IS NOT NULL
+
+SELECT * FROM `t_jours_nuit_ferie_dimanche` WHERE Dates='2020-11-23' AND H_conge IS NOT NULL
+/*4*/
+/*0*/
+SELECT * FROM `t_jours_conge` WHERE Dates='2020-11-23' AND H_repos IS NOT NULL
+
+SELECT * FROM `t_jours_nuit_ferie_dimanche` WHERE Dates='2020-11-23' AND H_repos IS NOT NULL
+/*0*/
+/*13*/
+SELECT * FROM `t_jours_conge` WHERE Dates='2020-11-23' AND H_autoabs IS NOT NULL
+
+SELECT * FROM `t_jours_nuit_ferie_dimanche` WHERE Dates='2020-11-23' AND H_autoabs IS NOT NULL
+/*13*/
+
+/*32*/
+
+SELECT * FROM  `t_jours_conge`  WHERE Dates =  '2020-11-24'
+
+SELECT * FROM `t_jours_nuit_ferie_dimanche` WHERE Dates='2020-11-24' AND (H_conge IS NOT NULL OR H_repos IS NOT NULL OR H_permission IS NOT NULL OR H_autoabs IS NOT NULL OR H_commission IS NOT NULL OR H_miseapied IS NOT NULL )
+/*32*/
+
+
+SELECT DISTINCT (Checkinout.Userid) AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS DeptCode, t_dept_save.Effectif AS DeptEff, DateValue(Checkinout.CheckTime) AS Dates
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND ((t_dept_save.Code)<>'BDRJ' And (t_dept_save.Code)<>'CPEJ' And (t_dept_save.Code)<>'CPLJ' And (t_dept_save.Code)<>'LVGJ' And (t_dept_save.Code)<>'MNTJ' And (t_dept_save.Code)<>'MECJ' And (t_dept_save.Code)<>'MROJ' And (t_dept_save.Code)<>'SMPJ' And (t_dept_save.Code)<>'STRJ' And (t_dept_save.Code)<>'DPRJ' And (t_dept_save.Code)<>'FNTJ' And (t_dept_save.Code)<>'GNRJ' And (t_dept_save.Code)<>'ADMJ' And (t_dept_save.Code)<>'STC') AND ((Checkinout.Userid)=[Userinfo].[Userid]) AND ((Checkinout.Userid)='197') AND ((DateValue([Checkinout].[CheckTime]))=Date()));
+
+
+
+SELECT DISTINCT (Checkinout.Userid) AS UserId, (Checkinout.CheckTime) AS CheckTime
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND ((t_dept_save.Code)<>'BDRJ' And (t_dept_save.Code)<>'CPEJ' And (t_dept_save.Code)<>'CPLJ' And (t_dept_save.Code)<>'LVGJ' And (t_dept_save.Code)<>'MNTJ' And (t_dept_save.Code)<>'MECJ' And (t_dept_save.Code)<>'MROJ' And (t_dept_save.Code)<>'SMPJ' And (t_dept_save.Code)<>'STRJ' And (t_dept_save.Code)<>'DPRJ' And (t_dept_save.Code)<>'FNTJ' And (t_dept_save.Code)<>'GNRJ' And (t_dept_save.Code)<>'ADMJ' And (t_dept_save.Code)<>'STC') AND ((Checkinout.Userid)=[Userinfo].[Userid]) AND ((Checkinout.Userid)='197') AND ((DateValue([Checkinout].[CheckTime]))=Date()));
+
+
+DELETE FROM Checkinout WHERE (((Checkinout.Userid)='197') AND ((DateValue(Checkinout.CheckTime))=Date()))

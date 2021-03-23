@@ -1,0 +1,9 @@
+SELECT DISTINCT DeptId AS DeptId, Code, Effectif, Nb_ret, ROUND( P_ret, 2 ) AS P_ret, Dates
+FROM t_pourcentage_retard
+WHERE (
+MONTH( Dates ) = MONTH( date_add( curdate( ), interval -1 month ) )
+)
+AND (
+Code !=  'STC'
+)
+ORDER BY DeptId

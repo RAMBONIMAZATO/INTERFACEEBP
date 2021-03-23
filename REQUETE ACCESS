@@ -1,0 +1,260 @@
+/*1REQ_Checkinout_dates*/
+INSERT INTO t_present_jours ( UserId, Name, Fonction, DeptId, DeptCode, DeptEff, Dates )
+SELECT DISTINCT (Checkinout.Userid) AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS DeptCode, t_dept_save.Effectif AS DeptEff, 
+DateValue(Checkinout.CheckTime) AS Dates
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And ((t_dept_save.Code)<>'BDRJ' And (t_dept_save.Code)<>'CPEJ' And (t_dept_save.Code)<>'CPLJ' 
+	And (t_dept_save.Code)<>'LVGJ' And (t_dept_save.Code)<>'MNTJ' And (t_dept_save.Code)<>'MECJ' 
+	And (t_dept_save.Code)<>'MROJ' And (t_dept_save.Code)<>'SMPJ' And (t_dept_save.Code)<>'STRJ' And (t_dept_save.Code)<>'DPRJ' And (t_dept_save.Code)<>'FNTJ' And (t_dept_save.Code)<>'GNRJ' 
+	And (t_dept_save.Code)<>'ADMJ' And (t_dept_save.Code)<>'STC') And ((TimeValue(Checkinout.CheckTime)) Between "05:30:00" And "12:30:00") And ((Checkinout.Userid)=Userinfo.Userid) 
+And ((DateValue(Checkinout.CheckTime))=Formulaires![DATA JOURS]!txt_date_2));
+
+/*2REQ_Checkinout_dates_journalier*/
+INSERT INTO t_presence_journalier ( UserId, Name, Fonction, DeptId, DeptCode, DeptEff, Dates )
+SELECT DISTINCT (Checkinout.Userid) AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS DeptCode, t_dept_save.Effectif AS DeptEff, 
+DateValue(Checkinout.CheckTime) AS Dates
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And (((t_dept_save.Code)='BDRJ' Or (t_dept_save.Code)='CPEJ' Or (t_dept_save.Code)='CPLJ' Or (t_dept_save.Code)='LVGJ' 
+	Or (t_dept_save.Code)='MNTJ' Or (t_dept_save.Code)='MECJ' Or (t_dept_save.Code)='MROJ' Or (t_dept_save.Code)='SMPJ' Or (t_dept_save.Code)='STRJ' Or (t_dept_save.Code)='DPRJ' 
+	Or (t_dept_save.Code)='FNTJ' Or (t_dept_save.Code)='GNRJ' Or (t_dept_save.Code)='ADMJ') And (t_dept_save.Code)<>'STC') And ((Checkinout.Userid)=Userinfo.Userid) 
+And ((TimeValue(Checkinout.CheckTime)) Between "05:30:00" And "12:30:00") And ((DateValue(Checkinout.CheckTime))=Formulaires![DATA JOURS]!txt_date_2));
+
+/*3REQ_HEURES_JOURS*/
+INSERT INTO t_pres_h_jours ( UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_E )
+SELECT Userinfo.Userid AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, 
+DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS H_E
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND ((t_dept_save.Code)<>'BDRJ' And (t_dept_save.Code)<>'CPEJ' And (t_dept_save.Code)<>'CPLJ' And (t_dept_save.Code)<>'LVGJ' 
+	And (t_dept_save.Code)<>'MNTJ' And (t_dept_save.Code)<>'MECJ' And (t_dept_save.Code)<>'MROJ' And (t_dept_save.Code)<>'SMPJ' And (t_dept_save.Code)<>'STRJ' And (t_dept_save.Code)<>'DPRJ' 
+	And (t_dept_save.Code)<>'FNTJ' And (t_dept_save.Code)<>'GNRJ' And (t_dept_save.Code)<>'ADMJ' And (t_dept_save.Code)<>'STC') AND ((Checkinout.Userid)=[Userinfo].[Userid]) 
+AND ((DateValue([Checkinout].[CheckTime]))=[Formulaires]![DATA JOURS]![txt_date_2]));
+
+/*4REQ_HEURES_JOURNALIER*/
+INSERT INTO t_heures_journalier ( UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_E )
+SELECT Userinfo.Userid AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, 
+DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS H_E
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND (((t_dept_save.Code)='BDRJ' Or (t_dept_save.Code)='CPEJ' Or (t_dept_save.Code)='CPLJ' Or (t_dept_save.Code)='LVGJ' 
+	Or (t_dept_save.Code)='MNTJ' Or (t_dept_save.Code)='MECJ' Or (t_dept_save.Code)='MROJ' Or (t_dept_save.Code)='SMPJ' Or (t_dept_save.Code)='STRJ' Or (t_dept_save.Code)='DPRJ' 
+	Or (t_dept_save.Code)='FNTJ' Or (t_dept_save.Code)='GNRJ' Or (t_dept_save.Code)='ADMJ') And (t_dept_save.Code)<>'STC') AND ((Checkinout.Userid)=[Userinfo].[Userid]) 
+AND ((DateValue([Checkinout].[CheckTime]))=[Formulaires]![DATA JOURS]![txt_date_2]));
+
+/*5REQ_H_E_S*/
+INSERT INTO t_h_e_s ( UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_entree, H_sortie, H_travail )
+SELECT Checkinout.Userid AS UserId, Min(Userinfo.Name) AS Name, Min(Userinfo.Duty) AS Fonction, Min(Userinfo.Deptid) AS DeptId, Min(t_dept_save.Code) AS Code, Min(t_dept_save.Effectif) AS Effectif, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Min(Checkinout.CheckTime)) AS H_entree, TimeValue(Max(Checkinout.CheckTime)) AS H_sortie, (Format((TimeValue(Max(Checkinout.CheckTime))-TimeValue(Min(Checkinout.CheckTime))),"hh:nn:ss")) AS H_travail
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Checkinout.Userid)=[Userinfo].[Userid]) AND ((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND ((DateValue([Checkinout].[CheckTime]))=[Formulaires]![DATA JOURS]![txt_date_1]))
+GROUP BY Checkinout.Userid, DateValue(Checkinout.CheckTime);
+
+
+/*NightShiftEntree*/
+INSERT INTO t_night_shift_entree ( UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_entree )
+SELECT Userinfo.Userid AS UserId, Userinfo.Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS H_entree
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND ((t_dept_save.Code)<>'STC') AND ((Checkinout.Userid)=[Userinfo].[Userid]) AND ((DateValue([Checkinout].[CheckTime]))=[Formulaires]![DATA JOURS]![txt_date_1]) AND ((TimeValue([Checkinout].[CheckTime])) Between "17:15:00" And "23:59:59"));
+
+
+/*NightShiftSortie*/
+INSERT INTO t_night_shift_sortie ( UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_sortie )
+SELECT Userinfo.Userid AS UserId, Userinfo.Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, 
+DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS H_sortie
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND ((t_dept_save.Code)<>'STC') AND ((Checkinout.Userid)=[Userinfo].[Userid]) 
+	AND ((DateValue([Checkinout].[CheckTime]))=[Formulaires]![DATA JOURS]![txt_date_2]) AND ((TimeValue([Checkinout].[CheckTime])) Between "00:00:00" And "05:30:00"));
+
+/*6REQ_Effectif*/
+INSERT INTO t_dept_user ( UserId, Fonction, Name, DeptId, Code, Effectif )
+SELECT Userinfo.Userid AS UserId, Userinfo.Duty AS Fonction, Userinfo.Name AS Name, t_dept_save.DeptId AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif
+FROM t_dept_save, Userinfo
+WHERE (((t_dept_save.DeptId)=(Userinfo.Deptid)) And ((t_dept_save.Code)<>'BDRJ' And (t_dept_save.Code)<>'CPEJ' And (t_dept_save.Code)<>'CPLJ' And (t_dept_save.Code)<>'LVGJ' And (t_dept_save.Code)<>'MNTJ' And (t_dept_save.Code)<>'MECJ' And (t_dept_save.Code)<>'MROJ' And (t_dept_save.Code)<>'SMPJ' And (t_dept_save.Code)<>'STRJ' And (t_dept_save.Code)<>'DPRJ' And (t_dept_save.Code)<>'FNTJ' And (t_dept_save.Code)<>'GNRJ' And (t_dept_save.Code)<>'ADMJ' And (t_dept_save.Code)<>'STC'));
+
+/*7REQ_Effectif_JOURNALIER*/
+INSERT INTO t_dept_journalier ( UserId, Name, Fonction, DeptId, Code, Effectif )
+SELECT Userinfo.Userid AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, t_dept_save.DeptId AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif
+FROM t_dept_save, Userinfo
+WHERE (((t_dept_save.DeptId)=(Userinfo.Deptid)) And ((t_dept_save.Code)='BDRJ' Or (t_dept_save.Code)='CPEJ' Or (t_dept_save.Code)='CPLJ' Or (t_dept_save.Code)='LVGJ' Or (t_dept_save.Code)='MNTJ' 
+	Or (t_dept_save.Code)='STRJ' Or (t_dept_save.Code)='DPRJ' Or (t_dept_save.Code)='FNTJ' Or (t_dept_save.Code)='GNRJ' Or (t_dept_save.Code)='ADMJ'));
+
+/*TEST REQUETE*/
+SELECT Userinfo.Userid AS Userid, MIN(Userinfo.Name) AS Name, MIN(Userinfo.Duty) AS Duty, MIN(t_dept_save.Code) AS Dept, Format(MIN(DateValue(Checkinout.CheckTime)),'dd/mm/yyyy') AS Dates, COUNT(Userinfo.Userid) AS Nb_Pointage
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) AND (Userinfo.Plage_E<>#18:30:0#) And ((t_dept_save.Code)<>'STC') And ((Checkinout.Userid)=Userinfo.Userid) And ((DateValue(Checkinout.CheckTime))=(Date()-1)))
+GROUP BY Userinfo.Userid, Userinfo.Name
+HAVING (COUNT(Userinfo.Userid)<>2);
+
+INSERT INTO t_present_jours ( UserId, Name, Fonction, DeptId, DeptCode, DeptEff, Dates, Motif )
+SELECT DISTINCT (Checkinout.Userid) AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS DeptCode, t_dept_save.Effectif AS DeptEff, DateValue(Checkinout.CheckTime) AS Dates, 'night shift' AS Motif
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And ((t_dept_save.Code)<>'BDRJ' And (t_dept_save.Code)<>'CPEJ' And (t_dept_save.Code)<>'CPLJ' And (t_dept_save.Code)<>'LVGJ' 
+	And (t_dept_save.Code)<>'MNTJ' And (t_dept_save.Code)<>'MECJ' And (t_dept_save.Code)<>'MROJ' And (t_dept_save.Code)<>'SMPJ' And (t_dept_save.Code)<>'STRJ' And (t_dept_save.Code)<>'DPRJ' And (t_dept_save.Code)<>'FNTJ' And (t_dept_save.Code)<>'GNRJ' 
+And (t_dept_save.Code)<>'ADMJ' And (t_dept_save.Code)<>'STC') And (Userinfo.NSGroupe='N') And ((Checkinout.Userid)=Userinfo.Userid) And ((DateValue(Checkinout.CheckTime))=Date()));
+
+SELECT * FROM `t_present_jours` WHERE UserId='24347' AND Dates=DATE(NOW())
+
+INSERT INTO ANOMALIES_POINTAGE_NIGHT_SHIFT ( Userid, Name, Duty, Dept, Dates, Nb_Pointage )
+SELECT Userinfo.Userid AS Userid, MIN(Userinfo.Name) AS Name, MIN(Userinfo.Duty) AS Duty, MIN(t_dept_save.Code) AS Dept, Format(MIN(DateValue(Checkinout.CheckTime)),'dd/mm/yyyy') AS Dates, COUNT(Userinfo.Userid) AS Nb_Pointage
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And (Userinfo.Plage_E=#18:30:00#) And ((t_dept_save.Code)<>'STC') And ((Checkinout.Userid)=Userinfo.Userid) And ((DateValue(Checkinout.CheckTime)) BETWEEN (Date()-1) AND Date()))
+GROUP BY Userinfo.Userid, Userinfo.Name
+HAVING (COUNT(Userinfo.Userid)<>2);
+
+SELECT DISTINCT u.DeptId as DeptId,(CASE WHEN u.Code IS NULL THEN u.Code ELSE u.Code END) as Code, u.Effectif,'2021-03-08' AS Dates, (u.Effectif-COUNT(DISTINCT(a.UserId))) as Nb_pres,COUNT(DISTINCT a.UserId) as Nb_abs, (COUNT(DISTINCT(a.UserId))*100/u.Effectif) AS p_abs 
+FROM t_dept u INNER JOIN t_absence_jours a ON u.DeptId=a.DeptId WHERE a.Dates='2021-03-08'                            
+GROUP BY u.DeptId
+
+SELECT DISTINCT u.DeptId as DeptId,u.Code as Code, u.Effectif AS Effectif,'2021-03-08' AS Dates, (CASE  WHEN COUNT(DISTINCT(a.UserId)) IS NULL THEN u.Effectif ELSE (u.Effectif-COUNT(DISTINCT(a.UserId))) END) as Nb_pres,
+(CASE WHEN COUNT(DISTINCT a.UserId) IS NULL THEN NULL ELSE COUNT(DISTINCT a.UserId) END) as Nb_abs, 
+(CASE WHEN (COUNT(DISTINCT(a.UserId))*100/u.Effectif) IS NULL THEN u.Effectif ELSE (COUNT(DISTINCT(a.UserId))*100/u.Effectif) END) AS p_abs 
+FROM t_dept u INNER JOIN t_absence_jours a ON u.DeptId=a.DeptId WHERE a.Dates='2021-03-08'                            
+GROUP BY u.DeptId
+
+SELECT DISTINCT (CASE WHEN a.DeptId IS NULL THEN  p.DeptId  ELSE u.DeptId END) as DeptId,(CASE WHEN a.Code IS NULL THEN p.Code ELSE u.Code END) as Code, u.Effectif AS Effectif,
+COUNT(p.UserId) AS Nb_user,'2021-03-08' AS Dates, 
+(CASE  WHEN COUNT(DISTINCT(a.UserId)) IS NULL THEN COUNT(DISTINCT(p.UserId)) ELSE (u.Effectif-COUNT(DISTINCT(a.UserId))) END) as Nb_pres,
+(CASE WHEN COUNT(DISTINCT a.UserId) IS NULL THEN (COUNT(DISTINCT(p.UserId))-u.Effectif) ELSE COUNT(DISTINCT a.UserId) END) as Nb_abs, 
+(CASE WHEN (COUNT(DISTINCT(a.UserId))*100/u.Effectif) IS NULL THEN (COUNT(DISTINCT(p.UserId))-u.Effectif) ELSE (COUNT(DISTINCT(a.UserId))*100/u.Effectif) END) AS p_abs 
+FROM t_dept u 
+LEFT JOIN t_departement p ON p.DeptId=u.DeptId AND p.Code=u.Code 
+LEFT JOIN t_absence_jours a ON u.DeptId=a.DeptId  
+WHERE a.Dates='2021-03-08'                            
+GROUP BY u.DeptId
+
+SELECT DISTINCT u.DeptId AS DeptId, u.Code AS Code, u.Effectif AS Effectif, COUNT(DISTINCT p.UserId) AS Nb_pres, (CASE WHEN a.UserId IS NULL THEN COUNT(DISTINCT p.UserId) ELSE COUNT(DISTINCT p.UserId) END) AS Nb_abs
+FROM t_dept u LEFT JOIN t_departement p ON u.DeptId=p.DeptId
+LEFT JOIN t_absence_jours a ON a.UserId=p.UserId AND a.Dates='2021-03-08'
+GROUP BY u.DeptId
+
+
+SELECT DISTINCT a.DeptId AS DeptId, a.Code AS Code, COUNT( DISTINCT a.UserId ) AS Nb_abs
+FROM t_absence_jours a 
+WHERE a.Dates =  '2021-03-08' 
+GROUP BY a.DeptId
+UNION
+SELECT DISTINCT p.DeptId AS DeptId, p.Code, p.Effectif AS Effectif, COUNT( DISTINCT p.UserId ) AS Nb_user
+FROM t_departement p 
+GROUP BY p.DeptId
+
+SELECT d.DeptId, d.Code, d.Effectif FROM t_dept d 
+
+/*test*/
+INSERT INTO t_nb_absent(DeptId, Code, Nb_abs)
+SELECT DISTINCT a.DeptId AS DeptId, a.DeptCode AS Code, COUNT( DISTINCT a.UserId ) AS Nb_abs
+FROM t_present_jours a
+WHERE a.Dates =  '2021-03-08'
+GROUP BY a.DeptId
+
+
+INSERT INTO t_nb_absent(DeptId, Code, Nb_abs, Dates)
+SELECT DISTINCT a.DeptId AS DeptId, a.Code AS Code, COUNT( DISTINCT a.UserId ) AS Nb_abs, '2021-03-08' AS Dates
+FROM t_absence_jours a 
+WHERE a.Dates =  '2021-03-08' 
+GROUP BY a.DeptId
+
+INSERT INTO t_nb_present(DeptId, Code, Nb_user, Dates)
+SELECT DISTINCT d.DeptId AS DeptId, d.Code AS Code, d.Effectif AS Nb_user, '2021-03-08' AS Dates
+FROM t_dept d
+
+SELECT t_nb_present.DeptId, t_nb_present.Code, t_nb_present.Nb_user, t_nb_absent.Nb_abs, t_nb_present.Dates FROM `t_nb_present` INNER JOIN t_nb_absent ON t_nb_present.Dates=t_nb_absent.Dates AND t_nb_present.DeptId=t_nb_absent.DeptId
+WHERE t_nb_present.Dates='2021-03-08' AND t_nb_present.DeptId='MRO'
+
+/*fin*/
+
+INSERT INTO t_pres_h_jours ( UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_E )
+SELECT Userinfo.Userid AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS H_E
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And (Userinfo.Plage_E<>'18:30:0') 
+	And ((t_dept_save.Code)<>'BDRJ' And (t_dept_save.Code)<>'CPEJ' And (t_dept_save.Code)<>'CPLJ' And (t_dept_save.Code)<>'LVGJ' 
+		And (t_dept_save.Code)<>'MNTJ' And (t_dept_save.Code)<>'MECJ' And (t_dept_save.Code)<>'MROJ' And (t_dept_save.Code)<>'SMPJ' 
+		And (t_dept_save.Code)<>'STRJ' And (t_dept_save.Code)<>'DPRJ' And (t_dept_save.Code)<>'FNTJ' And (t_dept_save.Code)<>'GNRJ' 
+		And (t_dept_save.Code)<>'ADMJ' And (t_dept_save.Code)<>'STC') 
+	And ((Checkinout.Userid)=Userinfo.Userid) And ((DateValue(Checkinout.CheckTime))=Date()));
+
+
+SELECT * FROM Dept WHERE DeptName='BDRJ' OR DeptName='CPEJ' OR DeptName='CPLJ' OR DeptName='LVGJ' OR DeptName='MNTJ' OR DeptName='MECJ'
+OR DeptName='SMPJ' OR DeptName='STRJ' OR DeptName='DPRJ' OR DeptName='FNTJ' OR DeptName='ADMJ' OR DeptName='MROJ' OR DeptName='GNRJ';
+
+
+SELECT DISTINCT (Checkinout.Userid) AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS DeptCode, t_dept_save.Effectif AS DeptEff, DateValue(Checkinout.CheckTime) AS Dates
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) 
+	And ((t_dept_save.Code)<>'BDRJ' 
+	And (t_dept_save.Code)<>'CPEJ' 
+	And (t_dept_save.Code)<>'CPLJ' 
+	And (t_dept_save.Code)<>'LVGJ' 
+	And (t_dept_save.Code)<>'MNTJ' 
+	And (t_dept_save.Code)<>'MECJ' 
+	And (t_dept_save.Code)<>'MROJ' 
+	And (t_dept_save.Code)<>'SMPJ' 
+	And (t_dept_save.Code)<>'STRJ' 
+	And (t_dept_save.Code)<>'DPRJ' 
+	And (t_dept_save.Code)<>'FNTJ' 
+	And (t_dept_save.Code)<>'GNRJ' 
+	And (t_dept_save.Code)<>'ADMJ' 
+	And (t_dept_save.Code)<>'STC')
+INSERT INTO t_dept ( DeptId, Code, Effectif )
+SELECT DeptId, Code, Effectif
+FROM t_dept_save
+WHERE Code<>'BDRJ' And Code<>'GNBR' And Code<>'CPEJ' And Code<>'CPLJ' And Code<>'LVGJ' And Code<>'MNTJ' And Code<>'STRJ' And Code<>'DPRJ' And Code<>'FNTJ' And Code<>'ADMJ' And Code<>'MECJ';
+
+SELECT Userinfo.Userid AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, t_dept_save.DeptId AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif
+FROM t_dept_save, Userinfo
+WHERE ((t_dept_save.DeptId)=(Userinfo.Deptid)) AND ((t_dept_save.Code) LIKE '*J');
+
+
+
+SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, 
+            (CASE 
+                WHEN c.Dates IS NOT NULL THEN c.Dates
+                WHEN r.Dates IS NOT NULL THEN r.Dates
+                WHEN p.Dates IS NOT NULL THEN p.Dates
+                WHEN abs.Dates IS NOT NULL THEN abs.Dates
+                WHEN com.Dates IS NOT NULL THEN com.Dates
+                WHEN m.Dates IS NOT NULL THEN m.Dates
+            END) AS Dates
+            ,c.H_conge AS H_conge, r.H_repos AS H_repos, p.H_permission AS H_permission,
+            abs.H_autoabs AS H_autoabs, com.H_commission AS H_commission, m.H_miseapied AS H_miseapied FROM t_dept_user t 
+            LEFT JOIN t_h_conge c ON t.UserId=c.UserId AND t.Name=c.Name
+            LEFT JOIN t_h_repos r ON t.UserId=r.UserId AND t.Name=r.Name
+            LEFT JOIN t_h_permission p ON t.UserId=p.UserId AND t.Name=p.Name
+            LEFT JOIN t_h_autoabs abs ON t.UserId=abs.UserId AND t.Name=abs.Name
+            LEFT JOIN t_h_commission com ON t.UserId=com.UserId AND t.Name=com.Name
+            LEFT JOIN t_h_miseapied m ON t.UserId=m.UserId AND t.Name=m.Name
+            WHERE (H_conge IS NOT NULL OR H_repos IS NOT NULL OR H_permission IS NOT NULL OR H_autoabs IS NOT NULL OR H_commission IS NOT NULL OR H_miseapied IS NOT NULL)
+            AND c.Dates='2021-02-23' AND r.Dates='2021-02-23' AND p.Dates='2021-02-23' AND abs.Dates='2021-02-23' AND com.Dates='2021-02-23' AND m.Dates='2021-02-23'
+            GROUP BY t.UserId
+
+            SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, 
+            (CASE 
+                WHEN c.Dates IS NOT NULL THEN c.Dates
+                WHEN r.Dates IS NOT NULL THEN r.Dates
+                WHEN p.Dates IS NOT NULL THEN p.Dates
+                WHEN abs.Dates IS NOT NULL THEN abs.Dates
+                WHEN com.Dates IS NOT NULL THEN com.Dates
+                WHEN m.Dates IS NOT NULL THEN m.Dates
+            END) AS Dates
+            ,c.H_conge AS H_conge, r.H_repos AS H_repos, p.H_permission AS H_permission,
+            abs.H_autoabs AS H_autoabs, com.H_commission AS H_commission, m.H_miseapied AS H_miseapied FROM t_dept_user t 
+            LEFT JOIN t_h_conge c ON t.UserId=c.UserId AND c.Dates='2021-02-23'
+            LEFT JOIN t_h_repos r ON t.UserId=r.UserId AND r.Dates='2021-02-23'
+            LEFT JOIN t_h_permission p ON t.UserId=p.UserId AND p.Dates='2021-02-23'
+            LEFT JOIN t_h_autoabs abs ON t.UserId=abs.UserId AND abs.Dates='2021-02-23'
+            LEFT JOIN t_h_commission com ON t.UserId=com.UserId AND com.Dates='2021-02-23'
+            LEFT JOIN t_h_miseapied m ON t.UserId=m.UserId AND m.Dates='2021-02-23'
+            WHERE (c.H_conge IS NOT NULL OR r.H_repos IS NOT NULL OR p.H_permission IS NOT NULL OR abs.H_autoabs IS NOT NULL OR com.H_commission IS NOT NULL OR m.H_miseapied IS NOT NULL)
+            GROUP BY t.UserId
+
+            SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code,'2021-02-23' AS Dates
+            ,c.H_conge AS H_conge, r.H_repos AS H_repos, p.H_permission AS H_permission,
+            abs.H_autoabs AS H_autoabs, com.H_commission AS H_commission, m.H_miseapied AS H_miseapied FROM t_dept_user t 
+            LEFT JOIN t_h_conge c ON t.UserId=c.UserId AND c.Dates='2021-02-23'
+            LEFT JOIN t_h_repos r ON t.UserId=r.UserId AND r.Dates='2021-02-23'
+            LEFT JOIN t_h_permission p ON t.UserId=p.UserId AND p.Dates='2021-02-23'
+            LEFT JOIN t_h_autoabs abs ON t.UserId=abs.UserId AND abs.Dates='2021-02-23'
+            LEFT JOIN t_h_commission com ON t.UserId=com.UserId AND com.Dates='2021-02-23'
+            LEFT JOIN t_h_miseapied m ON t.UserId=m.UserId AND m.Dates='2021-02-23'
+            WHERE (c.H_conge IS NOT NULL OR r.H_repos IS NOT NULL OR p.H_permission IS NOT NULL OR abs.H_autoabs IS NOT NULL OR com.H_commission IS NOT NULL OR m.H_miseapied IS NOT NULL)
+            GROUP BY t.UserId
+
+
+
+

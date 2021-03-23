@@ -1,0 +1,37 @@
+SELECT * FROM `t_retard_jours` 
+WHERE MONTH(Dates)=MONTH(Date(now())
+AND YEAR(Dates)=YEAR(Date(now()))
+AND (DAYOFWEEK(Dates) BETWEEN 1 AND 7)
+
+
+SELECT * FROM `t_retard_jours` WHERE Dates BETWEEN '2020-08-03' AND '2020-08-09'
+
+SELECT DISTINCT Dates FROM `t_retard_jours` WHERE MONTH(Dates)=MONTH(Date(now())) AND (DAYOFWEEK(Dates) BETWEEN 1 AND 7)
+
+
+SELECT DISTINCT UserId, Name, DeptId, Code, Effectif, Dates, H_E FROM `t_pres_h_jours`
+WHERE ((Dates=date_add(curdate(), interval -1 day)) AND (Code!='ADM') AND (Code!='GNR') AND (H_E between '07:10:00' and '10:00:00'))
+UNION
+SELECT DISTINCT UserId, Name, DeptId, Code, Effectif, Dates, H_E FROM `t_pres_h_jours` 
+WHERE ((Dates=date_add(curdate(), interval -1 day)) AND (Code='ADM') AND (H_E between '08:10:00' and '10:00:00'))
+UNION
+SELECT DISTINCT UserId, Name, DeptId, Code, Effectif, Dates, H_E FROM `t_pres_h_jours` 
+WHERE ((Dates=date_add(curdate(), interval -1 day)) AND (Code='GNR') AND (H_E between '06:10:00' and '10:00:00'))
+
+
+INSERT INTO t_retard_jours(UserId, Name, DeptId, Code, Effectif, Dates, H_E)
+SELECT UserId, Name, DeptId, Code, Effectif, Dates, H_E FROM `t_pres_h_jours`                                
+WHERE ((Dates=date_add(curdate(), interval -1 day)) AND (Code!='ADM') AND (Code!='GNR') AND (H_E between '07:10:00' and '10:00:00'))
+UNION
+SELECT UserId, Name, DeptId, Code, Effectif, Dates, H_E FROM `t_pres_h_jours` 
+WHERE ((Dates=date_add(curdate(), interval -1 day)) AND (Code='ADM') AND (H_E between '08:10:00' and '10:00:00'))
+UNION
+SELECT UserId, Name, DeptId, Code, Effectif, Dates, H_E FROM `t_pres_h_jours` 
+WHERE ((Dates=date_add(curdate(), interval -1 day)) AND (Code='GNR') AND (H_E between '06:10:00' and '10:00:00'))
+
+SELECT * FROM t_absence_jours WHERE (Dates=DATE_ADD(CURDATE(), INTERVAL -1 DAY)) AND (Obs IS NULL)
+
+INSERT INTO t_dept_user(UserId, Name, Fonction, DeptId, Code, Effectif)
+SELECT Userinfo.Userid AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, t_dept_save.DeptId AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif
+FROM Userinfo, t_dept_save
+WHERE (((t_dept_save.Code)<>'STC') And ((Userinfo.Deptid)=t_dept_save.DeptId));

@@ -1,0 +1,348 @@
+/*1REQ_Checkinout_dates*//*---------->*//*REQ_PRESENCE_PERMANANT*/
+/*((TimeValue(Checkinout.CheckTime)) Between "05:30:00" And "12:30:00") And */
+INSERT INTO t_present_jours ( UserId, Name, Fonction, DeptId, DeptCode, DeptEff, Dates )
+SELECT DISTINCT (Checkinout.Userid) AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS DeptCode, t_dept_save.Effectif AS DeptEff, 
+DateValue(Checkinout.CheckTime) AS Dates
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And ((t_dept_save.Code)<>'BDRJ' And (t_dept_save.Code)<>'CPEJ' And (t_dept_save.Code)<>'CPLJ' 
+	And (t_dept_save.Code)<>'LVGJ' And (t_dept_save.Code)<>'MNTJ' And (t_dept_save.Code)<>'MECJ' 
+	And (t_dept_save.Code)<>'MROJ' And (t_dept_save.Code)<>'SMPJ' And (t_dept_save.Code)<>'STRJ' And (t_dept_save.Code)<>'DPRJ' And (t_dept_save.Code)<>'FNTJ' And (t_dept_save.Code)<>'GNRJ' 
+	And (t_dept_save.Code)<>'ADMJ' And (t_dept_save.Code)<>'STC') And (Userinfo.Plage_E<>'18:30:00') And ((Checkinout.Userid)=Userinfo.Userid) 
+And ((DateValue(Checkinout.CheckTime))=Date()));
+
+/*2REQ_Checkinout_dates_journalier*//*---------->*//*REQ_PRESENCE_JOURNALIER*/
+/*(TimeValue(Checkinout.CheckTime)) Between "05:30:00" And "12:30:00"*/
+INSERT INTO t_presence_journalier ( UserId, Name, Fonction, DeptId, DeptCode, DeptEff, Dates )
+SELECT DISTINCT (Checkinout.Userid) AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS DeptCode, t_dept_save.Effectif AS DeptEff, 
+DateValue(Checkinout.CheckTime) AS Dates
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And (((t_dept_save.Code)='BDRJ' Or (t_dept_save.Code)='CPEJ' Or (t_dept_save.Code)='CPLJ' Or (t_dept_save.Code)='LVGJ' 
+	Or (t_dept_save.Code)='MNTJ' Or (t_dept_save.Code)='MECJ' Or (t_dept_save.Code)='MROJ' Or (t_dept_save.Code)='SMPJ' Or (t_dept_save.Code)='STRJ' Or (t_dept_save.Code)='DPRJ' 
+	Or (t_dept_save.Code)='FNTJ' Or (t_dept_save.Code)='GNRJ' Or (t_dept_save.Code)='ADMJ') And (t_dept_save.Code)<>'STC') And ((Checkinout.Userid)=Userinfo.Userid) 
+And (Userinfo.Plage_E<>#18:30:00#) And ((DateValue(Checkinout.CheckTime))=Date()));
+
+/*3REQ_HEURES_JOURS*//*---------->*//*REQ_HEURE_PERMANANT*/
+INSERT INTO t_pres_h_jours ( UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_E )
+SELECT Userinfo.Userid AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, 
+DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS H_E
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND (Userinfo.Plage_E<>#18:30:00#) AND ((t_dept_save.Code)<>'BDRJ' And (t_dept_save.Code)<>'CPEJ' And (t_dept_save.Code)<>'CPLJ' And (t_dept_save.Code)<>'LVGJ' 
+	And (t_dept_save.Code)<>'MNTJ' And (t_dept_save.Code)<>'MECJ' And (t_dept_save.Code)<>'MROJ' And (t_dept_save.Code)<>'SMPJ' And (t_dept_save.Code)<>'STRJ' And (t_dept_save.Code)<>'DPRJ' 
+	And (t_dept_save.Code)<>'FNTJ' And (t_dept_save.Code)<>'GNRJ' And (t_dept_save.Code)<>'ADMJ' And (t_dept_save.Code)<>'STC') AND ((Checkinout.Userid)=[Userinfo].[Userid]) 
+AND ((DateValue([Checkinout].[CheckTime]))=Date()));
+
+
+/*4REQ_HEURES_JOURNALIER*//*---------->*//*REQ_HEURE_JOURNALIER*/
+INSERT INTO t_heures_journalier ( UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_E )
+SELECT Userinfo.Userid AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, 
+DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS H_E
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND (Userinfo.Plage_E<>#18:30:00#) AND (((t_dept_save.Code)='BDRJ' Or (t_dept_save.Code)='CPEJ' Or (t_dept_save.Code)='CPLJ' Or (t_dept_save.Code)='LVGJ' 
+	Or (t_dept_save.Code)='MNTJ' Or (t_dept_save.Code)='MECJ' Or (t_dept_save.Code)='MROJ' Or (t_dept_save.Code)='SMPJ' Or (t_dept_save.Code)='STRJ' Or (t_dept_save.Code)='DPRJ' 
+	Or (t_dept_save.Code)='FNTJ' Or (t_dept_save.Code)='GNRJ' Or (t_dept_save.Code)='ADMJ') And (t_dept_save.Code)<>'STC') AND ((Checkinout.Userid)=[Userinfo].[Userid]) 
+AND ((DateValue([Checkinout].[CheckTime]))=Date()));
+
+/*5REQ_H_E_S*//*---------->*//*REQ_HEURE_TRAVAIL_JOUR*/
+INSERT INTO t_h_e_s ( UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_entree, H_sortie, H_travail )
+SELECT Checkinout.Userid AS UserId, Min(Userinfo.Name) AS Name, Min(Userinfo.Duty) AS Fonction, Min(Userinfo.Deptid) AS DeptId, Min(t_dept_save.Code) AS Code, Min(t_dept_save.Effectif) 
+AS Effectif, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Min(Checkinout.CheckTime)) AS H_entree, TimeValue(Max(Checkinout.CheckTime)) AS H_sortie, 
+(Format((TimeValue(Max(Checkinout.CheckTime))-TimeValue(Min(Checkinout.CheckTime))),"hh:nn:ss")) AS H_travail
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Checkinout.Userid)=[Userinfo].[Userid]) AND (Userinfo.Plage_E<>#18:30:00#) AND ((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND 
+	((DateValue([Checkinout].[CheckTime]))=(Date()-1)))
+GROUP BY Checkinout.Userid, DateValue(Checkinout.CheckTime);
+
+/*NightShiftEntree*//*---------->*//*REQ_NIGHT_SHIFT_ENTER*/
+/*((TimeValue([Checkinout].[CheckTime])) Between "17:15:00" And "23:59:59")*/
+INSERT INTO t_night_shift_entree ( UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_entree )
+SELECT Userinfo.Userid AS UserId, Userinfo.Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, DateValue(Checkinout.CheckTime) AS Dates, 
+TimeValue(Checkinout.CheckTime) AS H_entree
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND (Userinfo.Plage_E=#18:30:00#) AND ((t_dept_save.Code)<>'STC') AND ((Checkinout.Userid)=[Userinfo].[Userid]) 
+	AND ((DateValue([Checkinout].[CheckTime]))=(Date()-1)));
+
+/*NightShiftSortie*//*---------->*//*REQ_NIGHT_SHIFT_EXIT*/
+/*AND ((TimeValue([Checkinout].[CheckTime])) Between "00:00:00" And "05:30:00")*/
+INSERT INTO t_night_shift_sortie ( UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_sortie )
+SELECT Userinfo.Userid AS UserId, Userinfo.Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, 
+DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS H_sortie
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND (Userinfo.Plage_E=#18:30:00#) AND ((t_dept_save.Code)<>'STC') AND ((Checkinout.Userid)=[Userinfo].[Userid]) 
+	AND ((DateValue([Checkinout].[CheckTime]))=Date()));
+
+
+INSERT INTO t_h_travail_backup(UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_entree, H_sortie, P_entree, P_sortie, Pause, H_Retard,H_travail)
+SELECT UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_entree, H_sortie, P_entree, P_sortie, Pause, H_Retard, H_travail FROM t_h_travail
+
+
+SELECT Userinfo.Userid, Userinfo.Name, Userinfo.Groupe, Userinfo.Plage_E FROM Userinfo WHERE Userinfo.Groupe='L' AND Userinfo.Plage_E<>#12/30/1899 07:00:0#;
+
+SELECT Checkinout.Userid, DateValue(Checkinout.CheckTime), TimeValue(Checkinout.CheckTime)  FROM Checkinout  WHERE (DateValue(Checkinout.CheckTime)=Date()-3) AND Checkinout.Userid='20289';
+
+SELECT Checkinout.Userid, DateValue(Checkinout.CheckTime), Min(TimeValue(Checkinout.CheckTime)) AS HE1,Min(TimeValue(Checkinout.CheckTime)) AS HE2,Max(TimeValue(Checkinout.CheckTime)) AS HE3   FROM Checkinout  WHERE (DateValue(Checkinout.CheckTime)=Date()-3) AND Checkinout.Userid='20289'
+GROUP BY Checkinout.Userid,DateValue(Checkinout.CheckTime);
+
+SELECT Checkinout.Userid, DateValue(Checkinout.CheckTime), Min(TimeValue(Checkinout.CheckTime)) AS HE1, Max(TimeValue(Checkinout.CheckTime)) AS HE3   FROM Checkinout  WHERE (DateValue(Checkinout.CheckTime)=Date()-3) AND Checkinout.Userid='20289'
+ AND TimeValue(Checkinout.CheckTime)<#18:00:00#
+GROUP BY Checkinout.Userid,DateValue(Checkinout.CheckTime);
+
+SELECT Checkinout.Userid, DateValue(Checkinout.CheckTime), Min(TimeValue(Checkinout.CheckTime)) AS HE1, Max(TimeValue(Checkinout.CheckTime)) AS HE3   FROM Checkinout  WHERE (DateValue(Checkinout.CheckTime)=Date()-3) AND Checkinout.Userid='72053'
+ AND TimeValue(Checkinout.CheckTime)<#18:00:00#
+GROUP BY Checkinout.Userid,DateValue(Checkinout.CheckTime);
+
+SELECT Userid, TimeValue(Checkinout.CheckTime) FROM Checkinout WHERE Userid='23883' And DateValue(Checkinout.CheckTime)=(Date()-1)
+
+SELECT Checkinout.Userid AS UserId, Min(Userinfo.Name) AS Name, Min(Userinfo.Duty) AS Fonction, Min(Userinfo.Deptid) AS DeptId, Min(t_dept_save.Code) AS Code, Min(t_dept_save.Effectif) AS Effectif, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Min(Checkinout.CheckTime)) AS H_entree, TimeValue(Max(Checkinout.CheckTime)) AS H_sortie, (Format((TimeValue(Max(Checkinout.CheckTime))-TimeValue(Min(Checkinout.CheckTime))),"hh:nn:ss")) AS H_travail
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Checkinout.Userid)=Userinfo.Userid) And (((Userinfo.Deptid)<>65) And ((Userinfo.Groupe)='L')) And (TimeValue(Max(Checkinout.CheckTime))<Userinfo.Plage_S) And ((Userinfo.Deptid)=t_dept_save.DeptId) And ((DateValue(Checkinout.CheckTime))=(Date()-1)))
+GROUP BY Checkinout.Userid, DateValue(Checkinout.CheckTime);
+
+SELECT Checkinout.Userid AS UserId, Min(Userinfo.Name) AS Name, Min(Userinfo.Duty) AS Fonction, Min(Userinfo.Deptid) AS DeptId, Min(t_dept_save.Code) AS Code, Min(t_dept_save.Effectif) AS Effectif, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Min(Checkinout.CheckTime)) AS H_entree, TimeValue(Max(Checkinout.CheckTime)) AS H_sortie, (Format((TimeValue(Max(Checkinout.CheckTime))-TimeValue(Min(Checkinout.CheckTime))),"hh:nn:ss")) AS H_travail
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Checkinout.Userid)=Userinfo.Userid) And (TimeValue(Max(Checkinout.CheckTime))<#Userinfo.Plage_S#) And (((Userinfo.Deptid)<>65) And ((Userinfo.Groupe)='L')) And ((Userinfo.Deptid)=t_dept_save.DeptId) And ((DateValue(Checkinout.CheckTime))=(Date()-1)))
+GROUP BY Checkinout.Userid, DateValue(Checkinout.CheckTime);
+
+SELECT Checkinout.Userid, DateValue(Checkinout.CheckTime), Min(TimeValue(Checkinout.CheckTime)) AS HE1, Max(TimeValue(Checkinout.CheckTime)) AS HE3   FROM Checkinout,Userinfo  WHERE (DateValue(Checkinout.CheckTime)=Date()-1)
+ AND TimeValue(Userinfo.Plage_S)<#14:00:00# OR Userinfo.Groupe='L'
+GROUP BY Checkinout.Userid,DateValue(Checkinout.CheckTime);
+
+
+/*Mety vohalohany*/
+SELECT Checkinout.Userid, Userinfo.Name, DateValue(Checkinout.CheckTime), TimeValue(Checkinout.CheckTime) , Userinfo.Groupe, Userinfo.Plage_E FROM Checkinout,Userinfo WHERE Checkinout.Userid=Userinfo.Userid AND Userinfo.Groupe='L' 
+AND DateValue(Checkinout.CheckTime)=Date()-1 
+
+SELECT Checkinout.Userid, Min(Userinfo.Name) AS Name, DateValue(Checkinout.CheckTime) AS Dates, Min(TimeValue(Checkinout.CheckTime)) AS H_E, Max(TimeValue(Checkinout.CheckTime)) AS H_S , Min(Userinfo.Groupe) AS Groupe, Min(Userinfo.Plage_E) AS Plage_E, Min(Userinfo.Plage_S) AS Plage_S
+FROM Checkinout,Userinfo 
+WHERE Checkinout.Userid=Userinfo.Userid AND Userinfo.Groupe='L' 
+AND DateValue(Checkinout.CheckTime)=(Date()-1) AND TimeValue(Checkinout.CheckTime)<Userinfo.Plage_S
+GROUP BY Checkinout.Userid,DateValue(Checkinout.CheckTime)
+
+/*Mety faharoa*/
+
+SELECT Checkinout.Userid AS UserId, Userinfo.Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS H_entree
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND Userinfo.Userid=Checkinout.Userid AND TimeValue(Checkinout.CheckTime)>Userinfo.Plage_S  AND (Userinfo.Groupe='L') AND ((t_dept_save.Code)<>'STC') AND ((Checkinout.Userid)=[Userinfo].[Userid]) AND ((DateValue([Checkinout].[CheckTime]))=Date()-1));
+
+
+INSERT INTO t_present_jours(UserId, Fonction, Name, DeptId, DeptCode, DeptEff, Dates, Motif)
+SELECT DISTINCT u.UserId AS UserId, u.Fonction, u.Name, u.DeptId, d.Code, d.Effectif, u.Dates, u.Motif
+FROM t_present_jours_backup u LEFT JOIN t_dept d ON u.DeptId=d.DeptId
+
+SELECT UserId, Name, Fonction, Motif, DeptCode, COUNT(Dates) 
+FROM t_present_jours 
+WHERE Dates='2021-03-11' AND DeptCode='FNTCDD'
+GROUP BY UserId
+HAVING COUNT(Dates)=2
+
+SELECT * FROM `t_present_jours` WHERE UserId='26635' AND Dates='2021-03-11'
+
+
+SELECT id, UserId, Name, Fonction, DeptCode, Dates, Motif, COUNT(UserId) AS Nb_user
+FROM t_present_jours WHERE Dates='2021-03-10' GROUP BY UserId
+UNION 
+SELECT max(id) AS id, UserId, Name, Fonction, DeptCode,Dates,Motif, COUNT(UserId) AS Nb_user
+FROM t_present_jours WHERE Dates='2021-03-10' GROUP BY UserId HAVING COUNT(UserId)>=2
+
+((Userinfo.Plage_E)=#12/30/1899 18:30:0#)
+
+SELECT DISTINCT (Checkinout.Userid) AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS DeptCode, t_dept_save.Effectif AS DeptEff, DateValue(Checkinout.CheckTime) AS Dates, 'night shift' AS Motif
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And ((t_dept_save.Code) LIKE '*J' And (t_dept_save.Code)<>'STC')  
+And ((Checkinout.Userid)=Userinfo.Userid) And ((DateValue(Checkinout.CheckTime))=Date()));
+
+SELECT DISTINCT (Checkinout.Userid) AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS DeptCode, t_dept_save.Effectif AS DeptEff, DateValue(Checkinout.CheckTime) AS Dates, 'night shift' AS Motif
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And ((t_dept_save.Code) NOT  LIKE '*J'  And (Userinfo.Plage_E=#18:30:00#) And (t_dept_save.Code)<>'STC')  
+And ((Checkinout.Userid)=Userinfo.Userid) And ((DateValue(Checkinout.CheckTime))=Date()));
+
+SELECT DISTINCT (Checkinout.Userid) AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS DeptCode, t_dept_save.Effectif AS DeptEff, DateValue(Checkinout.CheckTime) AS Dates, 'night shift' AS Motif
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And ((t_dept_save.Code) NOT  LIKE '*J'  And (t_dept_save.Code)<>'STC')  And  (Userinfo.Plage_E=#18:30:00#)
+And ((Checkinout.Userid)=Userinfo.Userid) And ((DateValue(Checkinout.CheckTime))=Date()));
+
+SELECT DISTINCT (Userinfo.Userid) AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS DeptCode, t_dept_save.Effectif AS DeptEff, IIF(Checkinout.Userid IS NULL, Format(Date(), 'yyyy-mm-dd'), ((DateValue(Checkinout.CheckTime))=Date())) AS Dates, 'night shift' AS Motif
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And ((t_dept_save.Code) NOT  LIKE '*J'  And (t_dept_save.Code)<>'STC')  And  (Userinfo.Plage_E=#18:30:00#)
+And (Userinfo.Userid=Checkinout.Userid) And ((DateValue(Checkinout.CheckTime))=Date()));
+
+
+SELECT DISTINCT (Userinfo.Userid) AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS DeptCode, t_dept_save.Effectif AS DeptEff, Date() AS Dates, 'night shift' AS Motif
+FROM Userinfo, t_dept_save
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And ((t_dept_save.Code) NOT  LIKE '*J'  And (t_dept_save.Code)<>'STC')  And  (Userinfo.Plage_E=#18:30:00#));
+
+
+SELECT DISTINCT (Checkinout.Userid) AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS DeptCode, t_dept_save.Effectif AS DeptEff, DateValue(Checkinout.CheckTime) AS Dates
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND ((t_dept_save.Code) NOT LIKE 'BDRJ' And (t_dept_save.Code)<>'STC') 
+AND ((Userinfo.Plage_E)<>#12/30/1899 18:30:0#) AND ((Checkinout.Userid)=[Userinfo].[Userid]) AND ((DateValue([Checkinout].[CheckTime]))=Date()));
+
+SELECT DISTINCT (Checkinout.Userid) AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS DeptCode, t_dept_save.Effectif AS DeptEff, DateValue(Checkinout.CheckTime) AS Dates
+FROM Checkinout, Userinfo, t_dept_save
+WHERE (((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND ((t_dept_save.Code) LIKE '*J' And (t_dept_save.Code)<>'STC') 
+AND ((Checkinout.Userid)=[Userinfo].[Userid]) 
+AND ((Userinfo.Plage_E)<>#12/30/1899 18:30:0#) AND ((DateValue([Checkinout].[CheckTime]))=[Formulaires]![PRESENCE JOUR]![txt_presence_jour]));
+
+SELECT Userinfo.Userid AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS H_E
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND ((t_dept_save.Code) NOT LIKE '*J' And (t_dept_save.Code)<>'STC') 
+AND ((Userinfo.Plage_E)<>#12/30/1899 18:30:0#) AND ((Checkinout.Userid)=[Userinfo].[Userid]) AND ((DateValue([Checkinout].[CheckTime]))=[Formulaires]![PRESENCE JOUR]![txt_presence_jour]));
+
+
+INSERT INTO t_heures_journalier ( UserId, Name, Fonction, DeptId, Code, Effectif, Dates, H_E )
+SELECT Userinfo.Userid AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS H_E
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=[t_dept_save].[DeptId]) AND ((t_dept_save.Code) LIKE '*J' And (t_dept_save.Code)<>'STC') 
+AND ((Userinfo.Plage_E)<>#12/30/1899 18:30:0#) AND ((Checkinout.Userid)=[Userinfo].[Userid]) AND ((DateValue([Checkinout].[CheckTime]))=[Formulaires]![PRESENCE JOUR]![txt_presence_jour]));
+
+
+INSERT INTO t_absence_jours_backup(UserId, Name, Fonction,DeptId, Code, Effectif, Dates, Obs, Dates_fin)
+SELECT DISTINCT UserId, Name, Fonction, DeptId, Code, Effectif, Dates, Obs, Dates_fin FROM t_absence_jours 
+
+
+SELECT Userinfo.Userid AS UserId, Userinfo.Name, Userinfo.Duty AS Fonction, Userinfo.Deptid AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif, DateValue(Checkinout.CheckTime) AS Dates, (TimeValue(Checkinout.CheckTime)) AS H_entree
+FROM Userinfo, t_dept_save, Checkinout
+WHERE (((Userinfo.Deptid)=t_dept_save.DeptId) And ((t_dept_save.Code)<>'STC')  And ((Userinfo.Plage_E)=#12/30/1899 18:30:0#) And ((Checkinout.Userid)=Userinfo.Userid) And ((DateValue(Checkinout.CheckTime))=(Date()-1)))
+
+/*NIGHT SHIFT ENTREE SORTIE*/
+SELECT e.UserId AS UserId, e.Name AS Name, e.Fonction AS Fonction,e.DeptId AS DeptId, e.Code AS Code, e.Dates AS Dates, e.H_entree AS H_entree, s.H_sortie AS H_sortie
+FROM t_night_shift_entree e 
+INNER JOIN t_night_shift_sortie s ON s.UserId=e.UserId 
+WHERE e.Dates='2021-03-15' AND s.Dates='2021-03-16'
+
+
+SELECT s.UserId AS UserId, s.Name AS Name, s.Fonction AS Fonction,s.DeptId AS DeptId, s.Code AS Code, e.Dates AS Dates, e.H_entree AS H_entree, s.H_sortie AS H_sortie
+FROM t_night_shift_sortie s
+INNER JOIN t_night_shift_entree e ON s.UserId=e.UserId 
+WHERE e.Dates='2021-03-15' AND s.Dates='2021-03-16'
+
+
+SELECT d.UserId AS UserId, d.Name AS Name, d.Fonction AS Fonction, d.DeptId AS DeptId, d.Code AS Code, e.Dates AS Dates_E, e.H_entree AS H_entree,s.Dates AS Dates, s.H_sortie AS H_sortie
+FROM t_night_shift_sortie s
+LEFT JOIN t_dept_user d ON s.UserId = d.UserId AND s.DeptId=d.DeptId
+LEFT JOIN t_night_shift_entree e ON e.UserId=d.UserId AND s.DeptId=d.DeptId
+WHERE s.Dates= '2021-03-16' AND e.Dates='2021-03-15'
+
+$q_travail_nuit="INSERT INTO t_h_nuit(UserId, Name, Fonction, DeptId, Code, Dates, H_entree, H_sortie)
+SELECT d.UserId AS UserId, d.Name AS Name, d.Fonction AS Fonction, d.DeptId AS DeptId, d.Code AS Code, e.Dates AS Dates, e.H_entree AS H_entree,s.H_sortie AS H_sortie,
+'22:00:00' AS P_entree
+FROM t_dept_user d
+LEFT JOIN  t_night_shift_sortie s ON s.UserId = d.UserId AND s.DeptId=d.DeptId
+LEFT JOIN t_night_shift_entree e ON e.UserId=d.UserId AND s.DeptId=d.DeptId
+WHERE s.Dates= '2021-03-16' AND e.Dates='2021-03-15'";
+$r_q_travail_nuit=mysqli_query($connection, $q_travail_nuit);
+
+
+SELECT Userid, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS Heures_entree FROM Checkinout WHERE DateValue(Checkinout.CheckTime)=#3/8/2021# AND Checkinout.Userid='20715';
+
+SELECT Userid, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS Heures_entree FROM Checkinout WHERE (DateValue(Checkinout.CheckTime) BETWEEN (Date()-1) AND Date()) AND Checkinout.Userid='26729';
+
+SELECT d.UserId AS UserId, d.Name AS Name, d.Fonction AS Fonction, d.DeptId AS DeptId, d.Code AS Code, e.Dates AS Dates, e.H_entree AS H_entree, s.H_sortie AS H_sortie,  '22:00:00' AS P_entree
+FROM t_dept_user d
+LEFT JOIN t_night_shift_sortie s ON s.UserId = d.UserId AND s.DeptId = d.DeptId
+LEFT JOIN t_night_shift_entree e ON e.UserId = d.UserId AND s.DeptId = d.DeptId
+WHERE e.Dates='2021-03-17' AND s.Dates='2021-03-18'
+
+SELECT d.UserId AS UserId, d.Name AS Name, d.Fonction AS Fonction, d.DeptId AS DeptId, d.Code AS Code, e.Dates AS Dates, e.H_entree AS H_entree
+FROM t_dept_user d
+LEFT JOIN t_night_shift_entree e ON e.UserId = d.UserId
+WHERE e.Dates='2021-03-17'
+
+SELECT d.UserId AS UserId, d.Name AS Name, d.Fonction AS Fonction, d.DeptId AS DeptId, d.Code AS Code, s.Dates AS Dates, s.H_sortie AS H_sortie
+FROM t_dept_user d
+LEFT JOIN t_night_shift_sortie s ON s.UserId = d.UserId
+WHERE s.Dates='2021-03-18'
+
+SELECT d.UserId AS UserId, d.Name AS Name, d.Fonction AS Fonction, d.DeptId AS DeptId, d.Code AS Code, e.Dates AS Dates, e.H_entree AS H_entree, s.H_sortie AS H_sortie,  '22:00:00' AS P_entree
+FROM t_dept_user d
+LEFT JOIN t_night_shift_sortie s ON s.UserId = d.UserId AND s.Dates='2021-03-18'
+LEFT JOIN t_night_shift_entree e ON e.UserId = d.UserId AND e.Dates='2021-03-17'
+
+SELECT Userid, DateValue(Checkinout.CheckTime) AS Dates, TimeValue(Checkinout.CheckTime) AS Heures_entree FROM Checkinout
+WHERE Checkinout.Userid='20129' AND DateValue(Checkinout.CheckTime)=#3/1/2021#;
+
+
+INSERT INTO xtest(mat,code, dates)
+SELECT '20137', 'FNT', '2021-01-20' FROM `xtest` WHERE NOT EXISTS(SELECT mat, code, dates FROM xtest WHERE mat='20137' AND code='FNT' AND dates='2021-01-20')
+
+
+SELECT d.UserId, c.Code FROM test_dept d LEFT JOIN test_mat c ON c.UserId=d.UserId WHERE NOT EXISTS(SELECT UserId, Code 
+FROM test_masse WHERE UserId='23' AND Code='FNT')
+
+SELECT d.UserId, c.Code FROM test_dept d LEFT JOIN test_mat c ON c.UserId=d.UserId WHERE EXISTS(SELECT UserId, Code 
+FROM test_masse WHERE UserId='23' AND Code='FNT')
+
+/*INSERT INTO test_mass(UserId, Code)
+SELECT '23', 'FNT' FROM test_dept d LEFT JOIN test_mat c ON c.UserId=d.UserId WHERE NOT EXISTS(SELECT UserId, Code 
+FROM test_masse WHERE UserId='23' AND Code='FNT')*/
+
+INSERT INTO test_masse(UserId, Code)
+SELECT '23', 'FNT' FROM test_dept WHERE NOT EXISTS(SELECT UserId, Code 
+FROM test_masse WHERE UserId='23' AND Code='FNT')
+
+INSERT INTO test_masse(UserId, Code)
+SELECT '12', 'ADM' FROM test_dept d LEFT JOIN test_mat c ON c.UserId=d.UserId WHERE NOT EXISTS(SELECT DISTINCT UserId, Code 
+FROM test_masse WHERE UserId='12' AND Code='ADM')
+
+/**/
+SELECT d.UserId, c.Code FROM test_dept d LEFT JOIN test_mat c ON d.UserId=c.UserId WHERE NOT EXISTS(SELECT UserId, Code FROM `test_masse` WHERE UserId='23')
+
+SELECT d.UserId, c.Code FROM test_dept d LEFT JOIN test_mat c ON d.UserId=c.UserId WHERE NOT EXISTS(SELECT DISTINCT UserId, Code FROM `test_masse` WHERE UserId='23') AND d.UserId='23'
+
+INSERT INTO test_masse(UserId, Code)
+SELECT d.UserId, c.Code FROM test_dept d LEFT JOIN test_mat c ON d.UserId=c.UserId WHERE EXISTS(SELECT DISTINCT UserId, Code FROM `test_masse` WHERE UserId='23') AND d.UserId='23'
+
+/*Mety*/
+INSERT INTO test_masse(UserId, Code)
+SELECT d.UserId, c.Code FROM test_dept d LEFT JOIN test_mat c ON d.UserId=c.UserId WHERE NOT EXISTS(SELECT DISTINCT UserId, Code FROM `test_masse` WHERE UserId='12') AND d.UserId='12'
+
+INSERT INTO test_masse(UserId, Code)
+SELECT d.UserId, c.Code FROM test_dept d LEFT JOIN test_mat c ON d.UserId=c.UserId WHERE NOT EXISTS(SELECT DISTINCT UserId, Code FROM `test_masse` WHERE UserId='12' AND Code='ADM') AND d.UserId='12'
+
+SELECT d.UserId, c.Code FROM test_dept d LEFT JOIN test_mat c ON d.UserId=c.UserId WHERE NOT EXISTS(SELECT DISTINCT UserId, Code FROM `test_masse` WHERE UserId='23' AND Code='FNT') AND d.UserId='23'
+
+SELECT d.UserId, c.Code FROM test_dept d LEFT JOIN test_mat c ON d.UserId=c.UserId WHERE EXISTS(SELECT DISTINCT UserId, Code FROM `test_masse` WHERE UserId='23' AND Code='FNT') AND d.UserId='23'
+/*fin mety*/
+
+
+SELECT DISTINCT u.DeptId as DeptId, u.Code as Code, u.Effectif as Effectif, DATE(NOW()) AS Dates, 
+        COUNT(distinct(p.UserId) ) as Nb_pres , (u.Effectif-COUNT(distinct(p.UserId))) as Nb_abs, ((u.Effectif-COUNT(distinct(p.UserId)))*100/u.Effectif) as p_abs
+        FROM  t_dept u LEFT JOIN t_present_jours p ON u.DeptId=p.DeptId AND p.Dates=DATE(NOW()) AND u.Code='FNTCDD'
+        WHERE p.Motif IS NULL  
+        GROUP BY u.DeptId
+
+SELECT * FROM `t_present_jours` WHERE UserId='26602' AND (Dates BETWEEN '2021-03-01' AND '2021-03-31')26635	26621 26602
+
+
+SELECT d.UserId AS UserId, d.Name AS Name, d.Fonction AS Fonction, d.DeptId AS DeptId, d.Code AS Code, e.Dates AS Dates, e.H_entree AS H_entree,s.H_sortie AS H_sortie,'22:00:00' AS P_entree 
+FROM t_dept_user d
+LEFT JOIN  t_night_shift_sortie s ON s.UserId = d.UserId AND s.DeptId=d.DeptId
+LEFT JOIN t_night_shift_entree e ON e.UserId=d.UserId AND e.DeptId=d.DeptId
+WHERE e.Dates='2021-03-15' AND s.Dates= '2021-03-16'
+
+SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, '$StartDate' AS Dates, j.H_travail AS H_jours, n.H_travail AS H_nuit
+FROM t_dept_user t
+LEFT JOIN t_h_travail j ON t.UserId = j.UserId AND j.Dates='$StartDate'
+LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND j.Dates=n.Dates
+WHERE j.Dates='$StartDate' AND (j.Commentaire IS NULL)
+GROUP BY t.UserId, t.Name
+
+SELECT d.UserId AS UserId, d.Name AS Name, d.Fonction AS Fonction, d.DeptId AS DeptId, d.Code AS Code, e.Dates AS Dates, e.H_entree AS H_entree,s.H_sortie AS H_sortie,'22:00:00' AS P_entree 
+FROM t_dept_user d
+LEFT JOIN t_night_shift_entree e ON d.UserId=e.UserId AND e.DeptId=d.DeptId 148
+LEFT JOIN t_night_shift_sortie s ON d.UserId=s.UserId AND s.DeptId=d.DeptId  154
+WHERE e.Dates='2021-03-15' AND s.Dates='2021-03-16'
+146
+
+
+SELECT d.UserId AS UserId, d.Name AS Name, d.Fonction AS Fonction, d.DeptId AS DeptId, d.Code AS Code, e.Dates AS Dates, e.H_entree AS H_entree,s.H_sortie AS H_sortie,'22:00:00' AS P_entree 
+FROM t_dept_user d
+INNER JOIN t_night_shift_entree e ON d.UserId=e.UserId AND e.DeptId=d.DeptId
+INNER JOIN t_night_shift_sortie s ON d.UserId=s.UserId AND s.DeptId=d.DeptId
+WHERE e.Dates='2021-03-15' AND s.Dates='2021-03-16'
+
+SELECT d.UserId AS UserId, d.Name AS Name, d.Fonction AS Fonction, d.DeptId AS DeptId, d.Code AS Code, e.Dates AS Dates, e.H_entree AS H_entree,s.H_sortie AS H_sortie,'22:00:00' AS P_entree 
+FROM t_dept_user d
+LEFT JOIN t_night_shift_entree e ON d.UserId=e.UserId AND e.DeptId=d.DeptId
+LEFT JOIN t_night_shift_sortie s ON d.UserId=s.UserId AND s.DeptId=d.DeptId
+WHERE e.Dates='2021-03-15' AND s.Dates='2021-03-16'
+GROUP BY d.UserId

@@ -1,0 +1,53 @@
+SELECT d.UserId, d.Name, d.Fonction, e.Dates, e.H_entree, s.H_sortie
+FROM t_dept_user d
+INNER JOIN t_night_shift_entree e ON e.UserId=d.UserId AND e.DeptId=d.DeptId
+INNER JOIN t_night_shift_sortie s ON s.UserId=d.UserId AND s.DeptId=d.DeptId
+WHERE e.Dates='2021-03-15' AND s.Dates='2021-03-16'
+GROUP BY d.UserId, d.DeptId
+
+SELECT d.UserId, d.Name, d.Fonction, e.Dates, e.H_entree
+FROM t_dept_user d
+INNER JOIN t_night_shift_entree e ON e.UserId = d.UserId
+AND e.DeptId = d.DeptId
+WHERE e.Dates =  '2021-03-15'
+
+SELECT d.UserId, d.Name, d.Fonction, s.Dates, s.H_sortie
+FROM t_dept_user d
+INNER JOIN t_night_shift_sortie s ON s.UserId = d.UserId
+AND s.DeptId = d.DeptId
+WHERE s.Dates =  '2021-03-16'
+
+SELECT d.UserId, d.Name, d.Fonction, e.Dates, e.H_entree, s.Dates, s.H_sortie
+FROM t_dept_user d
+LEFT JOIN t_night_shift_entree e ON e.UserId=d.UserId AND e.Name=d.Name
+LEFT JOIN t_night_shift_sortie s ON s.UserId=d.UserId AND s.Name=d.Name
+WHERE e.Dates='2021-03-15' AND s.Dates='2021-03-16'
+GROUP BY d.UserId, d.Name
+
+
+SELECT Userinfo.Userid, Userinfo.Name, MIN(Userinfo.Plage_E) AS Plage_E, MIN(DateValue(Checkinout.CheckTime)) AS Dates_sortie,MAX(TimeValue(Checkinout.CheckTime)) AS H_entree,  MAX(DateValue(Checkinout.CheckTime)) AS Dates_entree,  MIN(TimeValue(Checkinout.CheckTime)) AS H_sortie
+FROM Userinfo, Checkinout  
+WHERE Userinfo.Userid=Checkinout.Userid AND (DateValue(Checkinout.CheckTime) BETWEEN #3/15/2021#  AND #3/16/2021#) AND Plage_E=#18:30:00# 
+GROUP BY Userinfo.Userid, Userinfo.Name
+
+
+
+SELECT h.UserId, h.Name, h.H_travail, h.Dates, n.H_travail
+FROM t_h_travail h 
+LEFT JOIN t_h_nuit n ON n.UserId=h.UserId AND n.Name=h.Name
+WHERE h.Dates='2021-03-15' AND n.Dates='2021-03-15'
+
+SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, '2021-03-15' AS Dates, j.H_travail AS H_jours, n.H_travail AS H_nuit
+FROM t_dept_user t
+LEFT JOIN t_h_travail j ON t.UserId = j.UserId AND j.Dates='2021-03-15'
+LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND j.Dates=n.Dates
+WHERE j.Dates='2021-03-15' AND (j.Commentaire IS NULL)
+AND (j.H_travail IS NOT NULL) AND (n.H_travail IS NOT NULL)
+GROUP BY t.UserId, t.Name
+
+
+SELECT j.UserId AS UserId, j.Name AS Name, j.Fonction AS Fonction, j.DeptId AS DeptId, j.Code AS Code, '2021-03-15' AS Dates, j.H_travail AS H_jours, n.H_travail AS H_nuit
+FROM t_h_travail j 
+LEFT JOIN t_h_nuit n ON j.UserId=n.UserId AND j.Name=n.Name
+WHERE j.Dates='2021-03-15' AND (j.Commentaire IS NULL) AND n.Dates='2021-03-15'
+GROUP BY j.UserId, j.Name

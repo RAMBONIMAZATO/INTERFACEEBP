@@ -1,0 +1,50 @@
+/*heures a lobe*/
+SELECT j.UserId AS UserId, j.Name AS Name, j.Fonction AS Fonction, j.DeptId AS DeptId, j.Code AS Code, '2021-03-01' AS Dates, j.H_travail AS H_jours, n.H_travail AS H_nuit
+FROM t_h_travail j 
+LEFT JOIN t_h_nuit n ON j.UserId=n.UserId AND j.Name=n.Name
+WHERE j.Dates='2021-03-01' AND (j.Commentaire IS NULL) AND n.Dates='2021-03-01'
+GROUP BY j.UserId, j.Name
+
+/*HEURES TRAVAIL JOURS*/
+SELECT j.UserId, j.Name, j.Fonction, j.DeptId, j.Code, j.Dates, j.H_travail
+FROM t_h_travail j
+WHERE NOT EXISTS(SELECT UserId , Name, Fonction, DeptId, Code, Dates, H_jours
+FROM t_jours_nuit
+WHERE Dates='2021-03-15') AND j.Dates='2021-03-15'
+
+/*HEURE TRAVAIL NUITS*/
+SELECT n.UserId, n.Name, n.Fonction, n.DeptId, n.Code, n.Dates, n.H_travail
+FROM t_h_nuit n
+WHERE NOT EXISTS(SELECT UserId , Name, Fonction, DeptId, Code, Dates, H_nuit
+FROM t_jours_nuit
+WHERE Dates='2021-03-15') AND n.Dates='2021-03-15'
+
+
+SELECT distinct j.UserId, j.Name, j.Fonction, j.DeptId, j.Code, j.Dates, j.H_travail
+            FROM t_h_travail j
+            WHERE NOT EXISTS(SELECT UserId , Name, Fonction, DeptId, Code, Dates, H_jours
+            FROM t_jours_nuit
+            WHERE Dates='2021-03-15') AND j.Dates='2021-03-15' AND (j.Commentaire IS NULL)
+
+
+            
+            /*$q_j_n="INSERT INTO t_jours_nuit(UserId, Name,Fonction, DeptId, Code, Dates, H_jours, H_nuit)
+            SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, '$StartDate' AS Dates, j.H_travail AS H_jours, n.H_travail AS H_nuit
+            FROM t_dept_user t
+            LEFT JOIN t_h_travail j ON t.UserId = j.UserId AND j.Dates='$StartDate'
+            LEFT JOIN t_h_nuit n ON t.UserId=n.UserId AND j.Dates=n.Dates
+            WHERE j.Dates='$StartDate' AND (j.Commentaire IS NULL)
+            GROUP BY t.UserId, t.Name";*/
+
+            /*$q_jours="INSERT INTO t_jours_nuit(UserId, Name,Fonction, DeptId, Code, Dates, H_jours)
+            SELECT j.UserId AS UserId, j.Name AS Name, j.Fonction AS Fonction, j.DeptId AS DeptId, j.Code AS Code, '$StartDate' AS Dates, j.H_travail AS H_jours
+            FROM t_h_travail j
+            WHERE j.Dates='$StartDate' AND (j.Commentaire IS NULL)";*//*$q_j_n_conge="INSERT INTO t_jours_nuit_ferie_dimanche(UserId, Name,Fonction, DeptId, Code, Dates, H_jours, H_nuit, H_conge, H_repos, H_permission, H_autoabs,
+            H_commission, H_miseapied)
+            SELECT t.UserId AS UserId, t.Name AS Name, t.Fonction AS Fonction, t.DeptId AS DeptId, t.Code AS Code, '$StartDate' AS Dates, j.H_jours AS H_jours, j.H_nuit AS H_nuit,
+            c.H_conge AS H_conge, c.H_repos AS H_repos, c.H_permission AS H_permission, c.H_autoabs AS H_autoabs, c.H_commission AS H_commission, c.H_miseapied AS H_miseapied
+            FROM t_dept_user t
+            LEFT JOIN t_jours_nuit j ON t.UserId=j.UserId AND j.Dates='$StartDate'
+            LEFT JOIN t_jours_conge c ON t.UserId=c.UserId AND j.Dates=c.Dates
+            WHERE j.Dates='$StartDate'
+            GROUP BY  t.UserId, t.Name";*/

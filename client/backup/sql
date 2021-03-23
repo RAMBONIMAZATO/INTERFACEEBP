@@ -1,0 +1,70 @@
+SELECT * FROM `t_retard_jours` 
+WHERE MONTH(Dates)=MONTH(Date(now())
+AND YEAR(Dates)=YEAR(Date(now()))
+AND (DAYOFWEEK(Dates) BETWEEN 1 AND 7)
+
+
+SELECT * FROM `t_retard_jours` WHERE Dates BETWEEN '2020-08-03' AND '2020-08-09'
+
+SELECT DISTINCT Dates FROM `t_retard_jours` WHERE MONTH(Dates)=MONTH(Date(now())) AND (DAYOFWEEK(Dates) BETWEEN 1 AND 7)
+
+
+SELECT DISTINCT UserId, Name, DeptId, Code, Effectif, Dates, H_E FROM `t_pres_h_jours`
+WHERE ((Dates=date_add(curdate(), interval -1 day)) AND (Code!='ADM') AND (Code!='GNR') AND (H_E between '07:10:00' and '10:00:00'))
+UNION
+SELECT DISTINCT UserId, Name, DeptId, Code, Effectif, Dates, H_E FROM `t_pres_h_jours` 
+WHERE ((Dates=date_add(curdate(), interval -1 day)) AND (Code='ADM') AND (H_E between '08:10:00' and '10:00:00'))
+UNION
+SELECT DISTINCT UserId, Name, DeptId, Code, Effectif, Dates, H_E FROM `t_pres_h_jours` 
+WHERE ((Dates=date_add(curdate(), interval -1 day)) AND (Code='GNR') AND (H_E between '06:10:00' and '10:00:00'))
+
+
+INSERT INTO t_retard_jours(UserId, Name, DeptId, Code, Effectif, Dates, H_E)
+SELECT UserId, Name, DeptId, Code, Effectif, Dates, H_E FROM `t_pres_h_jours`                                
+WHERE ((Dates=date_add(curdate(), interval -1 day)) AND (Code!='ADM') AND (Code!='GNR') AND (H_E between '07:10:00' and '10:00:00'))
+UNION
+SELECT UserId, Name, DeptId, Code, Effectif, Dates, H_E FROM `t_pres_h_jours` 
+WHERE ((Dates=date_add(curdate(), interval -1 day)) AND (Code='ADM') AND (H_E between '08:10:00' and '10:00:00'))
+UNION
+SELECT UserId, Name, DeptId, Code, Effectif, Dates, H_E FROM `t_pres_h_jours` 
+WHERE ((Dates=date_add(curdate(), interval -1 day)) AND (Code='GNR') AND (H_E between '06:10:00' and '10:00:00'))
+
+SELECT * FROM t_absence_jours WHERE (Dates=DATE_ADD(CURDATE(), INTERVAL -1 DAY)) AND (Obs IS NULL)
+
+INSERT INTO t_dept_user(UserId, Name, Fonction, DeptId, Code, Effectif)
+SELECT Userinfo.Userid AS UserId, Userinfo.Name AS Name, Userinfo.Duty AS Fonction, t_dept_save.DeptId AS DeptId, t_dept_save.Code AS Code, t_dept_save.Effectif AS Effectif
+FROM Userinfo, t_dept_save
+WHERE (((t_dept_save.Code)<>'STC') And ((Userinfo.Deptid)=t_dept_save.DeptId));
+
+
+
+
+/*   11 Novembre 2020*/
+SELECT UserId, H_entree, H_sortie, P_entree, P_sortie
+FROM  `t_h_travail` 
+WHERE Dates = ( CURDATE( ) -1 )  AND UserId='71705'
+
+
+INSERT INTO t_h_semaine(UserId, Name, Fonction, DeptId, Code, Dates_debut, Dates_fin, Nb_jours, Semaine, Mois, Année, H_semaine)
+SELECT UserId, Name, Fonction, DeptId, Code, MIN( Dates ) AS Dates_debut, MAX( Dates ) AS Dates_fin, ABS( DATEDIFF( MIN( Dates ) , MAX( Dates ) ) ) AS Nb_jours, WEEK( Dates ) AS Semaine, MONTH( Dates ) AS Mois, YEAR( Dates ) AS Année, SEC_TO_TIME( SUM( DISTINCT TIME_TO_SEC( H_travail ) ) ) AS H_semaine
+FROM t_h_travail
+WHERE Dates
+BETWEEN  '2020-10-05'
+AND  '2020-10-10'
+GROUP BY UserId, Name
+
+
+SELECT * FROM `t_h_travail` WHERE (UserId='2706' AND (Dates BETWEEN '2020-10-05' AND '2020-10-10'))
+
+
+
+INSERT INTO t_h_semaine(UserId, Name, Fonction, DeptId, Code, Dates_debut, Dates_fin, Nb_jours, Semaine, Mois, Année, H_semaine)
+SELECT UserId, Name, Fonction, DeptId, Code, MIN( Dates ) AS Dates_debut, MAX( Dates ) AS Dates_fin, ABS( DATEDIFF( MIN( Dates ) , MAX( Dates ) ) ) AS Nb_jours, WEEK( Dates ) AS Semaine, MONTH( Dates ) AS Mois, YEAR( Dates ) AS Année, SEC_TO_TIME( SUM( DISTINCT TIME_TO_SEC( H_travail ) ) ) AS H_semaine
+FROM t_h_travail
+WHERE Dates
+BETWEEN  '2020-11-02'
+AND  '2020-11-07'
+GROUP BY UserId, Name
+
+
+SELECT * FROM `t_h_e_s` WHERE (Dates BETWEEN '2020-11-09' AND '2020-11-14') ORDER BY UserId

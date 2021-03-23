@@ -1,0 +1,146 @@
+SELECT DeptId, Code, 
+(CASE
+	WHEN (Obs='conge' AND Dates=Date(now())) THEN COUNT( UserId )
+ END) AS C
+FROM  `t_motif` 
+GROUP BY DeptId, Dates
+
+
+SELECT COUNT( UserId ) AS C
+FROM  `t_motif` 
+WHERE Obs =  'conge'
+AND Dates = DATE( NOW( ) ) 
+GROUP BY DeptId, Dates
+
+
+INSERT INTO conge(DeptId, Code, Dates, C)
+SELECT DeptId, Code, Dates, COUNT( UserId ) AS C
+FROM  `t_motif` 
+WHERE Obs =  'conge'
+AND Dates = DATE( NOW( ) ) 
+GROUP BY DeptId, Dates
+
+
+INSERT INTO conge_mat(DeptId, Code, Dates, CM)
+SELECT DeptId, Code, Dates, COUNT( UserId ) AS CM
+FROM  `t_motif` 
+WHERE Obs =  'conge maternite'
+AND Dates = DATE( NOW( ) ) 
+GROUP BY DeptId, Dates
+
+select c.DeptId, c.Code, c.Dates, c.C, c_mat.CM from conge c inner join conge_mat c_mat on c.Dates=c_mat.Dates where c.DeptId=c_mat.DeptId
+
+INSERT INTO suspendu(DeptId, Code, Dates, Susp)
+SELECT DeptId, Code, Dates, COUNT( UserId ) AS Susp
+FROM  `t_motif` 
+WHERE Obs =  'suspendu'
+AND Dates = DATE( NOW( ) ) 
+GROUP BY DeptId, Dates
+
+
+INSERT INTO t_pourcentage_abs(DeptId,Code,Effectif, Nb_pres, Nb_abs,P_abs,C,CM,AA, Com,Susp,RM,Recup, HP, Dates)
+SELECT A.DeptId, A.Code, A.Effectif,A.Nb_pres,A.Nb_abs, (A.p_abs) AS P_abs, c.C, cm.CM, aa.AA, com.Com, sus.Susp, rm.RM, rp.Recup, h.HP, A.Dates
+FROM t_abs A
+LEFT JOIN conge c ON A.DeptId = c.DeptId
+LEFT JOIN conge_mat cm ON A.DeptId = cm.DeptId
+LEFT JOIN abs_auto aa ON A.DeptId = aa.DeptId
+LEFT JOIN comission com ON A.DeptId = com.DeptId
+LEFT JOIN suspendu sus ON A.DeptId = sus.DeptId
+LEFT JOIN rep_med rm ON A.DeptId = rm.DeptId
+LEFT JOIN hospitalise h ON A.DeptId = h.DeptId
+LEFT JOIN recup rp ON A.DeptId = rp.DeptId
+WHERE A.Dates = DATE( NOW( ) ) 
+
+
+SELECT DISTINCT DeptId, Code, Effectif,
+(CASE
+	WHEN Obs='conge' THEN count(distinct UserId)
+END) AS C,
+(CASE
+	WHEN Obs='conge maternite' THEN count(distinct UserId)
+END) AS CM,
+(CASE
+	WHEN Obs='sans motif' THEN count(distinct UserId)
+END) AS SM,
+(CASE
+	WHEN Obs='repos medical' THEN count(distinct UserId)
+END) AS RM,
+(CASE
+	WHEN Obs='absence autorise' THEN count(distinct UserId)
+END) AS AA,
+(CASE
+	WHEN Obs='suspendu' THEN count(distinct UserId)
+END) AS Susp,
+(CASE
+	WHEN Obs='comission' THEN count(distinct UserId)
+END) AS Com
+FROM `t_motif` 
+WHERE Dates=Date(now())
+GROUP BY DeptId, Dates
+
+
+SELECT DISTINCT DeptId, Code, Effectif, (
+
+CASE 
+WHEN Obs =  'conge'
+THEN COUNT( DISTINCT UserId ) 
+END
+) AS C, (
+
+CASE 
+WHEN Obs =  'conge maternite'
+THEN COUNT( DISTINCT UserId ) 
+END
+) AS CM, (
+
+CASE 
+WHEN Obs =  'sans motif'
+THEN COUNT( DISTINCT UserId ) 
+END
+) AS SM, (
+
+CASE 
+WHEN Obs =  'repos medical'
+THEN COUNT( DISTINCT UserId ) 
+END
+) AS RM, (
+
+CASE 
+WHEN Obs =  'absence autorise'
+THEN COUNT( DISTINCT UserId ) 
+END
+) AS AA, (
+
+CASE 
+WHEN Obs =  'suspendu'
+THEN COUNT( DISTINCT UserId ) 
+END
+) AS Susp, (
+
+CASE 
+WHEN Obs =  'comission'
+THEN COUNT( DISTINCT UserId ) 
+END
+) AS Com
+FROM  `t_motif` 
+WHERE Dates = DATE( NOW( ) ) 
+GROUP BY Code, Dates
+
+
+SELECT DISTINCT A.DeptId, A.Code, A.Effectif,A.Nb_pres,A.Nb_abs, (A.p_abs) AS P_abs, c.C, cm.CM, aa.AA, com.Com, sus.Susp, rm.RM, rp.Recup, h.HP, m.MAP, A.Dates
+FROM t_abs A
+LEFT JOIN conge c ON A.DeptId = c.DeptId AND A.Dates=c.Dates
+LEFT JOIN conge_mat cm ON A.DeptId = cm.DeptId AND A.Dates=cm.Dates
+LEFT JOIN abs_auto aa ON A.DeptId = aa.DeptId AND A.Dates=aa.Dates
+LEFT JOIN comission com ON A.DeptId = com.DeptId AND A.Dates=com.Dates
+LEFT JOIN suspendu sus ON A.DeptId = sus.DeptId AND A.Dates=sus.Dates
+LEFT JOIN rep_med rm ON A.DeptId = rm.DeptId AND A.Dates=rm.Dates
+LEFT JOIN hospitalise h ON A.DeptId = h.DeptId AND A.Dates=h.Dates
+LEFT JOIN recup rp ON A.DeptId = rp.DeptId AND A.Dates=rp.Dates
+LEFT JOIN miseapied m ON A.DeptId = m.DeptId AND A.Dates=m.Dates
+WHERE A.Dates = DATE( NOW( ) ) 
+GROUP BY A.DeptId
+
+
+
+SELECT * FROM `t_absence_jours` WHERE UserId>70000 AND Dates=Date(now())

@@ -1,0 +1,151 @@
+SELECT sum(Effectif)
+FROM  `t_pourcentage_abs` 
+WHERE Dates = DATE( NOW( ) ) AND (Code='ADM' OR Code='QA')
+
+
+SELECT (case when Code is not null then "Administration/General" end) as Code, SUM( Effectif ) AS Effectif, Dates
+FROM  `t_pourcentage_abs` 
+WHERE Dates = DATE( NOW( ) ) 
+AND (Code =  'ADM' OR Code =  'GNR')
+
+INSERT INTO sumary(Code, Effectif, Dates)
+SELECT (CASE WHEN Code IS NOT NULL THEN "Administration/General" end) as Code, SUM( Effectif ) AS Effectif, Dates
+FROM  `t_pourcentage_abs` 
+WHERE Dates = DATE( NOW( ) ) 
+AND (Code =  'ADM' OR Code =  'GNR')
+
+
+UPDATE sumary SET Dates=Date(now()) AND Effectif=(SELECT SUM( Effectif ) AS Effectif
+FROM  `t_pourcentage_abs` 
+WHERE Dates = Date( now( ) ) 
+AND (
+Code =  'LN1'
+OR Code =  'LN2'
+OR Code =  'LN3'
+OR Code =  'LN4'
+OR Code =  'LN5'
+OR Code =  'LN6'
+OR Code =  'LN7'
+OR Code =  'LN8'
+OR Code =  'LN9'
+OR Code =  'LN10'
+OR Code =  'LN11'
+OR Code =  'LN12'
+OR Code =  'LN13'
+OR Code =  'LN14'
+OR Code =  'LN15'
+OR Code =  'LN16'
+OR Code =  'LN17'
+)
+)
+WHERE Code='sewing'
+
+
+SELECT (CASE WHEN Code IS NOT NULL THEN  "Administration/General" END) AS Code, 
+SUM( Effectif ) AS Effectif, SUM( Nb_pres ) AS Nb_pres, SUM(Nb_abs) AS Nb_abs, Dates
+FROM  `t_pourcentage_abs` 
+WHERE Dates = DATE(NOW()) 
+AND (Code = 'ADM' OR Code = 'GNR')
+
+INSERT INTO sumary(Code, Effectif, Nb_pres, Nb_abs, Dates)
+SELECT (CASE WHEN Code IS NOT NULL THEN  "Administration/General" END) AS Code, 
+SUM( Effectif ) AS Effectif, SUM( Nb_pres ) AS Nb_pres, SUM(Nb_abs) AS Nb_abs, Dates
+FROM  `t_pourcentage_abs` 
+WHERE Dates = DATE(NOW()) 
+AND (Code = 'ADM' OR Code = 'GNR')
+
+
+
+SELECT DeptId, Code, (
+
+CASE WHEN Code IS NOT NULL 
+THEN  'Total_CDI'
+END
+) AS Code, SUM( Effectif ) AS Effectif, SUM( Nb_pres ) AS Nb_pres, SUM( Nb_abs ) AS Nb_abs, Dates
+FROM  `t_pourcentage_abs` 
+WHERE Dates =  '2020-10-15'
+GROUP BY DeptId
+
+
+SELECT DISTINCT A.DeptId, A.Code,E.Effectif, A.Effectif,A.Nb_pres,A.Nb_abs, (A.p_abs) AS P_abs, c.C, cm.CM, aa.AA,p.P, com.Com, sus.Susp, rm.RM, rp.Recup, h.HP, m.MAP, nf.NF, sm.SM, A.Dates
+FROM t_abs A
+LEFT JOIN conge c ON A.DeptId = c.DeptId AND A.Dates=c.Dates
+LEFT JOIN conge_mat cm ON A.DeptId = cm.DeptId AND A.Dates=cm.Dates
+LEFT JOIN abs_auto aa ON A.DeptId = aa.DeptId AND A.Dates=aa.Dates
+LEFT JOIN permission p ON A.DeptId = p.DeptId AND A.Dates=p.Dates
+LEFT JOIN comission com ON A.DeptId = com.DeptId AND A.Dates=com.Dates
+LEFT JOIN suspendu sus ON A.DeptId = sus.DeptId AND A.Dates=sus.Dates
+LEFT JOIN rep_med rm ON A.DeptId = rm.DeptId AND A.Dates=rm.Dates
+LEFT JOIN hospitalise h ON A.DeptId = h.DeptId AND A.Dates=h.Dates
+LEFT JOIN recup rp ON A.DeptId = rp.DeptId AND A.Dates=rp.Dates
+LEFT JOIN miseapied m ON A.DeptId = m.DeptId AND A.Dates=m.Dates
+LEFT JOIN nightshift nf ON A.DeptId = nf.DeptId AND A.Dates=nf.Dates
+LEFT JOIN sans_motif sm ON A.DeptId=sm.DeptId AND A.Dates=sm.Dates
+LEFT JOIN t_abs E  ON E.DeptId =A.DeptId AND E.Dates='2020-10-17'                          
+WHERE A.Dates=DATE( NOW( ) ) AND A.Code!='EXP' AND A.Code!='GNBR'
+GROUP BY A.DeptId
+
+INSERT INTO t_pourcentage_cdd_cdi(`EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`)
+SELECT DISTINCT A.DeptId, A.Code,E.Effectif AS EFFJ1, A.Effectif,A.Nb_pres,A.Nb_abs, ROUND(A.p_abs,1) AS P_abs, c.C, cm.CM, aa.AA,p.P, com.Com, sus.Susp, rm.RM, rp.Recup, h.HP, m.MAP, nf.NF, sm.SM, A.Dates
+FROM t_abs A
+LEFT JOIN conge c ON A.DeptId = c.DeptId AND A.Dates=c.Dates
+LEFT JOIN conge_mat cm ON A.DeptId = cm.DeptId AND A.Dates=cm.Dates
+LEFT JOIN abs_auto aa ON A.DeptId = aa.DeptId AND A.Dates=aa.Dates
+LEFT JOIN permission p ON A.DeptId = p.DeptId AND A.Dates=p.Dates
+LEFT JOIN comission com ON A.DeptId = com.DeptId AND A.Dates=com.Dates
+LEFT JOIN suspendu sus ON A.DeptId = sus.DeptId AND A.Dates=sus.Dates
+LEFT JOIN rep_med rm ON A.DeptId = rm.DeptId AND A.Dates=rm.Dates
+LEFT JOIN hospitalise h ON A.DeptId = h.DeptId AND A.Dates=h.Dates
+LEFT JOIN recup rp ON A.DeptId = rp.DeptId AND A.Dates=rp.Dates
+LEFT JOIN miseapied m ON A.DeptId = m.DeptId AND A.Dates=m.Dates
+LEFT JOIN nightshift nf ON A.DeptId = nf.DeptId AND A.Dates=nf.Dates
+LEFT JOIN sans_motif sm ON A.DeptId=sm.DeptId AND A.Dates=sm.Dates
+LEFT JOIN t_abs E  ON E.DeptId = A.DeptId AND E.Dates=Date_add(Date(now()), interval -1 day)                         
+WHERE A.Dates=DATE( NOW( ) ) AND A.Code!='BDRCDD' AND A.Code!='DPRCDD' AND A.Code!='FORMATION' AND A.Code!='LVGCDD'
+GROUP BY A.Code
+
+SELECT   sum(EffJ_1), sum(EffJ), sum(Nb_pres), sum(Nb_abs), sum(P_abs), sum(Conge), sum(CM), sum(AbsAuto), sum(Perm), sum(Com), sum(Susp), sum(RM), sum(Recup), sum(Hosp), sum(Map), sum(NS), sum(SM), Dates FROM `t_pourcentage_cdd_cdi` WHERE Dates=Date(now()) AND Code!='EXP' AND Code!='GNBR' GROUP BY Dates
+
+INSERT INTO `t_pourcentage_cdd_cdi`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT (CASE WHEN Code IS NOT NULL THEN  'Total CDI' ELSE 'Total CDI' END), sum(EffJ_1), sum(EffJ), sum(Nb_pres), sum(Nb_abs), ROUND(sum(P_abs), 1), sum(Conge), sum(CM), sum(AbsAuto), sum(Perm), sum(Com), sum(Susp), sum(RM), sum(Recup), sum(Hosp), sum(Map), sum(NS), sum(SM), Dates FROM `t_pourcentage_cdd_cdi` WHERE Dates=Date(now()) AND Code!='EXP' AND Code!='GNBR' GROUP BY Dates
+
+
+INSERT INTO `t_pourcentage_cdd_cdi`(`DeptId`, `Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT DISTINCT A.DeptId, A.Code,E.Effectif AS EFFJ1, A.Effectif,A.Nb_pres,A.Nb_abs, ROUND(A.p_abs,1) AS P_abs, c.C, cm.CM, aa.AA,p.P, com.Com, sus.Susp, rm.RM, rp.Recup, h.HP, m.MAP, nf.NF, sm.SM, A.Dates
+FROM t_abs A
+LEFT JOIN conge c ON A.DeptId = c.DeptId AND A.Dates=c.Dates
+LEFT JOIN conge_mat cm ON A.DeptId = cm.DeptId AND A.Dates=cm.Dates
+LEFT JOIN abs_auto aa ON A.DeptId = aa.DeptId AND A.Dates=aa.Dates
+LEFT JOIN permission p ON A.DeptId = p.DeptId AND A.Dates=p.Dates
+LEFT JOIN comission com ON A.DeptId = com.DeptId AND A.Dates=com.Dates
+LEFT JOIN suspendu sus ON A.DeptId = sus.DeptId AND A.Dates=sus.Dates
+LEFT JOIN rep_med rm ON A.DeptId = rm.DeptId AND A.Dates=rm.Dates
+LEFT JOIN hospitalise h ON A.DeptId = h.DeptId AND A.Dates=h.Dates
+LEFT JOIN recup rp ON A.DeptId = rp.DeptId AND A.Dates=rp.Dates
+LEFT JOIN miseapied m ON A.DeptId = m.DeptId AND A.Dates=m.Dates
+LEFT JOIN nightshift nf ON A.DeptId = nf.DeptId AND A.Dates=nf.Dates
+LEFT JOIN sans_motif sm ON A.DeptId=sm.DeptId AND A.Dates=sm.Dates
+LEFT JOIN t_abs E  ON E.DeptId = A.DeptId AND E.Dates=Date_add(Date(now()), interval -1 day)                         
+WHERE A.Dates=DATE( NOW( ) ) AND (A.Code='BDRCDD' OR A.Code='DPRCDD' OR A.Code='FORMATION' OR A.Code='LVGCDD')
+GROUP BY A.Code
+
+
+INSERT INTO `t_pourcentage_cdd_cdi`(`Code`, `EffJ_1`, `EffJ`, `Nb_pres`, `Nb_abs`, `P_abs`, `Conge`, `CM`, `AbsAuto`, `Perm`, `Com`, `Susp`, `RM`, `Recup`, `Hosp`, `Map`, `NS`, `SM`, `Dates`) 
+SELECT  (CASE WHEN Code IS NOT NULL THEN  'Total CDD' ELSE 'Total CDD' END), sum(EffJ_1), sum(EffJ), sum(Nb_pres), sum(Nb_abs), sum(P_abs), sum(Conge), sum(CM), sum(AbsAuto), sum(Perm), sum(Com), sum(Susp), sum(RM), sum(Recup), sum(Hosp), sum(Map), sum(NS), sum(SM), Dates FROM `t_pourcentage_cdd_cdi` WHERE Dates=Date(now()) AND (Code='BDRCDD' OR Code='DPRCDD' OR Code='FORMATION' OR Code='LVGCDD') GROUP BY Dates
+
+
+
+INSERT INTO t_sous_dept(UserId, Name, Fonction, DeptId, Code, Effectif)
+SELECT * FROM `t_dept_user` 
+
+
+SELECT * FROM t_dept_user WHERE UserId NOT IN (SELECT UserId FROM t_sous_dept);
+SELECT * FROM t_dept_user LEFT JOIN t_sous_dept ON t_dept_user.UserId = t_sous_dept.UserId WHERE t_sous_dept.UserId IS NULL LIMIT 10
+
+
+UPDATE t_pourcentage_cdd_cdi SET P_abs= (SELECT (
+SUM( Nb_abs ) *100 / SUM( EffJ )
+)
+FROM t_pourcentage_cdd_cdi
+WHERE Dates = DATE( NOW( ) ) AND Code='Total CDD')
+WHERE Dates= DATE(NOW()) AND Code='Total CDD'
